@@ -537,3 +537,7 @@ func handle_j_power_slot(slot_index: int) -> void:
 	selected_own_hand_index_for_j = -1
 	selected_target_player_index = -1
 	finish_power_card_resolution()
+
+
+#func _on_deck_pressed() -> void:
+	#pass # Replace with function body.
