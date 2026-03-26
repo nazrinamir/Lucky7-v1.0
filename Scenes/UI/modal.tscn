@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bivtsima3542k"]
+
+[node name="Modal" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1154.0
+offset_bottom = 649.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 646.0
+color = Color(0.233925, 0.233925, 0.233925, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect"]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 644.0
+
+[node name="Panel" type="Panel" parent="ColorRect/CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer/Panel"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "XXXXXX"
+
+[node name="Button" type="Button" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Close "

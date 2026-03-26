@@ -132,3 +132,7 @@ func _input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("swap_slot_3"):
 		swap_with_hand(3)
+
+
+func _on_button_pressed() -> void:
+	pass # Replace with function body.
