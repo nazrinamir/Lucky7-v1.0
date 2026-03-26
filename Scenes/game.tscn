@@ -24,4 +24,4 @@ offset_bottom = 40.0
 [node name="Node2D" type="Node2D" parent="Modal"]
 
 [node name="Deck" parent="." instance=ExtResource("1_ebmjs")]
-position = Vector2(606, 273)
+position = Vector2(604, 268)
