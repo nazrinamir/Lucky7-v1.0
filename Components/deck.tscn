@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://csk5y2dxyjhlx" path="res://Assets/Red-Cover.png" id="1_0tl26"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0r3cw"]
-size = Vector2(60, 82)
+size = Vector2(65, 88)
 
 [sub_resource type="LabelSettings" id="LabelSettings_0tl26"]
 font_color = Color(0, 0, 0, 1)
@@ -13,16 +13,24 @@ font_color = Color(0, 0, 0, 1)
 [node name="DeckImage" type="Sprite2D" parent="."]
 texture = ExtResource("1_0tl26")
 
+[node name="DeckImage2" type="Sprite2D" parent="."]
+position = Vector2(-2, -2)
+texture = ExtResource("1_0tl26")
+
+[node name="DeckImage3" type="Sprite2D" parent="."]
+position = Vector2(-5, -5)
+texture = ExtResource("1_0tl26")
+
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(0, 2)
+position = Vector2(-2.5, -1)
 shape = SubResource("RectangleShape2D_0r3cw")
 
 [node name="Label" type="Label" parent="."]
-offset_left = -20.0
-offset_top = -11.0
-offset_right = 20.0
-offset_bottom = 12.0
+offset_left = -24.0
+offset_top = -14.0
+offset_right = 16.0
+offset_bottom = 9.0
 text = "Deck"
 label_settings = SubResource("LabelSettings_0tl26")

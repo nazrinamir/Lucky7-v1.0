@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cia3x6y07ln1g"]
+
+[ext_resource type="Texture2D" uid="uid://b6on67n1c5mwi" path="res://Assets/MainMenu/main_menu_background.jpg" id="1_pskv8"]
+
+[node name="Background" type="TextureRect"]
+offset_left = -6.0
+offset_top = -2.0
+offset_right = 1412.0
+offset_bottom = 707.0
+texture = ExtResource("1_pskv8")
+expand_mode = 1
