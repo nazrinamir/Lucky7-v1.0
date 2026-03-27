@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://c1y5eo27i70mj"]
 
 [ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_28flt"]
-[ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_48xlc"]
+[ext_resource type="Script" uid="uid://clpnku5kpvbgk" path="res://Scenes/main_menu.gd" id="1_48xlc"]
+[ext_resource type="Script" uid="uid://xiw3l08uaflc" path="res://Scripts/Multiplayer/multiplayer_manager.gd" id="3_1ehe0"]
 
 [node name="MainMenu" type="Control" unique_id=2027069872]
 layout_mode = 3
@@ -45,5 +46,8 @@ text = "Settings"
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1343041446]
 layout_mode = 2
 text = "Quit"
+
+[node name="MultiplayerManager" type="Node2D" parent="." unique_id=1097905476]
+script = ExtResource("3_1ehe0")
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

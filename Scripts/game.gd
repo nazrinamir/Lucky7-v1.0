@@ -3,11 +3,26 @@ extends Node2D
 @onready var game_manager := GameManager.new()
 @onready var input_manager := $InputManager
 
-func _ready():
+var room_id: String = ""
+var multiplayer_manager: MultiplayerManager
+
+func _ready() -> void:
 	game_manager.name = "GameManager"
 	add_child(game_manager)
 
-	input_manager.game_ref = game_manager
+	input_manager.set_game_ref(game_manager)
+
+	if multiplayer_manager != null and room_id != "":
+		var room_data = multiplayer_manager.get_room(room_id)
+
+		if not room_data.is_empty():
+			var player_count = room_data.get("players", []).size()
+			var seed = int(room_data.get("game_seed", -1))
+			game_manager.start_game(player_count, seed)
+		else:
+			game_manager.start_game()
+	else:
+		game_manager.start_game()
 
 func _input(event):
 	if event.is_action_pressed("draw_card"):

@@ -1,14 +1,18 @@
 extends Node
 class_name InputManager
 
-var game_ref
-
 @onready var deck = $"../Deck/Area2D"
 @onready var deck_button = $"../Deck"
 @onready var discard_button = get_node_or_null("../DiscardButton")
 @onready var drawn_card_display = $"../CardCanvasLayer/UICard/DrawnCard"
 @onready var hand_slots := [$"../CardSlot", $"../CardSlot2", $"../CardSlot3", $"../CardSlot4"]
 
+var game_ref = null
+
+func set_game_ref(value) -> void:
+	game_ref = value
+	print("game_ref assigned =", game_ref)
+	
 func _ready():
 	print("game_ref =", game_ref)
 
