@@ -11,6 +11,7 @@ func _ready() -> void:
 	add_child(game_manager)
 
 	input_manager.set_game_ref(game_manager)
+	input_manager.set_slot_manager($SlotManager)
 
 	if multiplayer_manager != null and room_id != "":
 		var room_data = multiplayer_manager.get_room(room_id)

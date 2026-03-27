@@ -3,6 +3,7 @@ class_name InputManager
 
 const BACK_CARD=preload("res://Assets/Red-Cover.png")
 
+@onready var slot_manager = $"../SlotManager"
 @onready var deck = $"../Deck/Area2D"
 @onready var deck_button = $"../Deck"
 @onready var discard_button =  $"../CardCanvasLayer/UICard/DiscardButton"
@@ -15,6 +16,9 @@ const BACK_CARD=preload("res://Assets/Red-Cover.png")
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"]
 
 var game_ref = null
+
+func set_slot_manager(value):
+	slot_manager = value
 
 func set_game_ref(value) -> void:
 	game_ref = value
@@ -64,7 +68,11 @@ func _on_slot_pressed(index: int):
 	
 
 func _on_swap_pressed():
-	print("Swap button pressed")
+	if game_ref == null:
+		print("game_ref is null")
+		return
+	
+	slot_manager.begin_swap_mode()
 
 func update_drawn_card_ui():
 	if drawn_card_display == null:

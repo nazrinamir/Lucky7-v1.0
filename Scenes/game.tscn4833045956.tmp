@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://el1vfo8up0ed" path="res://Scripts/UI Scripts/UI.gd" id="4_i6g32"]
 [ext_resource type="Script" uid="uid://1v4qbbyx6gfg" path="res://Scripts/UI Scripts/modal.gd" id="5_wowpa"]
 [ext_resource type="Script" uid="uid://o1a1xft4uljk" path="res://Scripts/input_manager.gd" id="8_v158k"]
-[ext_resource type="Script" uid="uid://djgsar5bqw1u7" path="res://Scripts/UI Scripts/slot_manager.gd" id="9_h4fw4"]
 
 [node name="Game" type="Node2D" unique_id=1830425454]
 script = ExtResource("1_wrm1d")
@@ -198,9 +197,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
-
-[node name="SlotManager" type="Node2D" parent="." unique_id=543557861]
-script = ExtResource("9_h4fw4")
 
 [connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
 [connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]
