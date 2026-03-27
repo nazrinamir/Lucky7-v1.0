@@ -27,30 +27,6 @@ offset_bottom = 268.0
 [node name="DiscardSlot" parent="." unique_id=372584211 instance=ExtResource("3_wrm1d")]
 position = Vector2(508, 268)
 
-[node name="CardSlot" parent="." unique_id=242584359 instance=ExtResource("4_1l0tm")]
-offset_left = 410.0
-offset_top = 564.0
-offset_right = 410.0
-offset_bottom = 564.0
-
-[node name="CardSlot2" parent="." unique_id=1319337050 instance=ExtResource("4_1l0tm")]
-offset_left = 494.0
-offset_top = 564.0
-offset_right = 494.0
-offset_bottom = 564.0
-
-[node name="CardSlot3" parent="." unique_id=1322187545 instance=ExtResource("4_1l0tm")]
-offset_left = 578.0
-offset_top = 564.0
-offset_right = 578.0
-offset_bottom = 564.0
-
-[node name="CardSlot4" parent="." unique_id=339817893 instance=ExtResource("4_1l0tm")]
-offset_left = 660.0
-offset_top = 564.0
-offset_right = 660.0
-offset_bottom = 564.0
-
 [node name="CardCanvasLayer" type="CanvasLayer" parent="." unique_id=1377791744]
 
 [node name="UICard" type="Control" parent="CardCanvasLayer" unique_id=1987625918]
@@ -113,6 +89,114 @@ text = "Open Modal"
 
 [node name="InputManager" type="Node2D" parent="." unique_id=353262635]
 script = ExtResource("8_v158k")
+
+[node name="PlayerCanvasLayer" type="CanvasLayer" parent="." unique_id=154930932]
+
+[node name="UI" type="Control" parent="PlayerCanvasLayer" unique_id=64997024]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CurrentPlayerHand" type="Control" parent="PlayerCanvasLayer/UI" unique_id=668227093]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 273.0
+offset_top = 501.2727
+offset_right = 787.0
+offset_bottom = 601.2727
+grow_horizontal = 2
+grow_vertical = 0
+rotation = -6.2831855
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/CurrentPlayerHand" unique_id=465739900]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CardSlot" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=242584359 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot2" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=1319337050 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot3" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=1322187545 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot4" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=339817893 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="OpponentTop" type="Control" parent="PlayerCanvasLayer/UI" unique_id=160242767]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 848.0
+offset_top = 104.0
+offset_right = 1362.0
+offset_bottom = 204.0
+grow_horizontal = 2
+rotation = 3.1415927
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentTop" unique_id=902801675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="OpponentLeft" type="Control" parent="PlayerCanvasLayer/UI" unique_id=1058388627]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 104.0
+offset_top = 39.0
+offset_right = 618.0
+offset_bottom = 139.0
+grow_horizontal = 2
+rotation = 1.5707964
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentLeft" unique_id=841093045]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="OpponentRight" type="Control" parent="PlayerCanvasLayer/UI" unique_id=731712029]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1056.0
+offset_top = 596.0
+offset_right = 1570.0
+offset_bottom = 696.0
+grow_horizontal = 2
+rotation = 4.712389
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentRight" unique_id=505252134]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
 [connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
 [connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]

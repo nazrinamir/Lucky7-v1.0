@@ -3,17 +3,21 @@ class_name InputManager
 
 var game_ref
 
+const BACK_CARD=preload("res://Assets/Red-Cover.png")
+
 @onready var deck = $"../Deck/Area2D"
 @onready var deck_button = $"../Deck"
 @onready var discard_button =  $"../CardCanvasLayer/UICard/DiscardButton"
 @onready var swap_button = $"../CardCanvasLayer/UICard/SwapButton"
 @onready var drawn_card_display = $"../CardCanvasLayer/UICard/DrawnCard"
 @onready var discard_card_display = $"../CardCanvasLayer/UICard/DiscardCard"
-@onready var hand_slots := [$"../CardSlot", $"../CardSlot2", $"../CardSlot3", $"../CardSlot4"]
+@onready var hand_slots := [$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot", 
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2", 
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3", 
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"]
 
 func _ready():
 	print("game_ref =", game_ref)
-	update_discard_card_ui()
 	discard_button.visible = false
 	swap_button.visible = false
 
@@ -28,19 +32,22 @@ func _ready():
 	
 	for i in range(hand_slots.size()):
 		hand_slots[i].pressed.connect(func(): _on_slot_pressed(i))
+	
+	update_discard_card_ui()
+	update_player_hand_ui()
 
 func _on_deck_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	game_ref.draw_from_deck()
+	game_ref.apply_command({"type":"draw_card"})
 	update_drawn_card_ui()
 
 func _on_discard_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	game_ref.discard_current_card()
+	game_ref.apply_command({"type":"discard_card"})
 	update_drawn_card_ui()
 	update_discard_card_ui()
 	get_discard_pile()
@@ -92,6 +99,22 @@ func update_discard_card_ui():
 		return
 
 	discard_card_display.texture_normal = top_card_discard["card"]["texture"]
+
+func update_player_hand_ui():
+	if game_ref == null:
+		print("game_ref is null")
+		return
+		
+	var player_index = game_ref.current_player_index
+	
+	for i in range(hand_slots.size()):
+		var slot_data = game_ref.get_player_slot(player_index, i)
+		if slot_data.is_empty():
+			hand_slots[i].texture_normal = null
+			continue
+		hand_slots[i].texture_normal = BACK_CARD
+		
+	print(hand_slots)
 
 func get_discard_pile():
 	if game_ref == null:
