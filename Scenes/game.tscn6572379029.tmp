@@ -1,0 +1,207 @@
+[gd_scene format=3 uid="uid://brf481px7tfve"]
+
+[ext_resource type="PackedScene" uid="uid://cmiw60sjohcoi" path="res://Components/deck.tscn" id="1_ebmjs"]
+[ext_resource type="Script" uid="uid://cmq08nfq5pm4n" path="res://Scripts/game.gd" id="1_wrm1d"]
+[ext_resource type="PackedScene" uid="uid://d1lnoxtxy0pgo" path="res://Components/discard_slot.tscn" id="3_wrm1d"]
+[ext_resource type="PackedScene" uid="uid://6qbg5tfrl3o4" path="res://Components/card_slot.tscn" id="4_1l0tm"]
+[ext_resource type="PackedScene" uid="uid://bivtsima3542k" path="res://Scenes/UI/modal.tscn" id="4_3dryh"]
+[ext_resource type="Script" uid="uid://el1vfo8up0ed" path="res://Scripts/UI Scripts/UI.gd" id="4_i6g32"]
+[ext_resource type="Script" uid="uid://1v4qbbyx6gfg" path="res://Scripts/UI Scripts/modal.gd" id="5_wowpa"]
+[ext_resource type="Script" uid="uid://o1a1xft4uljk" path="res://Scripts/input_manager.gd" id="8_v158k"]
+[ext_resource type="Script" uid="uid://djgsar5bqw1u7" path="res://Scripts/UI Scripts/slot_manager.gd" id="9_h4fw4"]
+
+[node name="Game" type="Node2D" unique_id=1830425454]
+script = ExtResource("1_wrm1d")
+
+[node name="BackgroundColor" type="ColorRect" parent="." unique_id=1237817748]
+offset_right = 1161.0
+offset_bottom = 656.0
+mouse_filter = 2
+color = Color(0.278009, 0.518599, 0.290759, 1)
+
+[node name="Deck" parent="." unique_id=1881964213 instance=ExtResource("1_ebmjs")]
+offset_left = 604.0
+offset_top = 268.0
+offset_right = 604.0
+offset_bottom = 268.0
+
+[node name="DiscardSlot" parent="." unique_id=372584211 instance=ExtResource("3_wrm1d")]
+position = Vector2(508, 268)
+
+[node name="CardCanvasLayer" type="CanvasLayer" parent="." unique_id=1377791744]
+
+[node name="UICard" type="Control" parent="CardCanvasLayer" unique_id=1987625918]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DrawnCard" type="TextureRect" parent="CardCanvasLayer/UICard" unique_id=142591384]
+layout_mode = 0
+offset_left = 685.0
+offset_top = 171.0
+offset_right = 879.0
+offset_bottom = 482.0
+
+[node name="DiscardButton" type="Button" parent="CardCanvasLayer/UICard" unique_id=1620768347]
+layout_mode = 0
+offset_left = 921.0
+offset_top = 282.0
+offset_right = 988.0
+offset_bottom = 313.0
+text = "Discard"
+
+[node name="SwapButton" type="Button" parent="CardCanvasLayer/UICard" unique_id=1479252890]
+layout_mode = 0
+offset_left = 930.0
+offset_top = 319.0
+offset_right = 980.0
+offset_bottom = 350.0
+text = "Swap"
+
+[node name="DiscardCard" type="TextureButton" parent="CardCanvasLayer/UICard" unique_id=419929398]
+layout_mode = 0
+offset_left = 474.0
+offset_top = 218.0
+offset_right = 540.0
+offset_bottom = 309.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=568644002]
+visible = false
+
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=1726963063]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_i6g32")
+
+[node name="Modal" parent="CanvasLayer/UI" unique_id=2393885 instance=ExtResource("4_3dryh")]
+layout_mode = 0
+script = ExtResource("5_wowpa")
+
+[node name="Button" type="Button" parent="CanvasLayer/UI" unique_id=512075566]
+layout_mode = 0
+offset_left = 521.0
+offset_top = 420.0
+offset_right = 624.0
+offset_bottom = 451.0
+text = "Open Modal"
+
+[node name="InputManager" type="Node2D" parent="." unique_id=353262635]
+script = ExtResource("8_v158k")
+
+[node name="PlayerCanvasLayer" type="CanvasLayer" parent="." unique_id=154930932]
+
+[node name="UI" type="Control" parent="PlayerCanvasLayer" unique_id=64997024]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CurrentPlayerHand" type="Control" parent="PlayerCanvasLayer/UI" unique_id=668227093]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 273.0
+offset_top = 501.2727
+offset_right = 787.0
+offset_bottom = 601.2727
+grow_horizontal = 2
+grow_vertical = 0
+rotation = -6.2831855
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/CurrentPlayerHand" unique_id=465739900]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CardSlot" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=242584359 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot2" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=1319337050 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot3" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=1322187545 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="CardSlot4" parent="PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer" unique_id=339817893 instance=ExtResource("4_1l0tm")]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+
+[node name="OpponentTop" type="Control" parent="PlayerCanvasLayer/UI" unique_id=160242767]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 848.0
+offset_top = 104.0
+offset_right = 1362.0
+offset_bottom = 204.0
+grow_horizontal = 2
+rotation = 3.1415927
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentTop" unique_id=902801675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="OpponentLeft" type="Control" parent="PlayerCanvasLayer/UI" unique_id=1058388627]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 104.0
+offset_top = 39.0
+offset_right = 618.0
+offset_bottom = 139.0
+grow_horizontal = 2
+rotation = 1.5707964
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentLeft" unique_id=841093045]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="OpponentRight" type="Control" parent="PlayerCanvasLayer/UI" unique_id=731712029]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 1056.0
+offset_top = 596.0
+offset_right = 1570.0
+offset_bottom = 696.0
+grow_horizontal = 2
+rotation = 4.712389
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerCanvasLayer/UI/OpponentRight" unique_id=505252134]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SlotManager" type="Node2D" parent="." unique_id=543557861]
+script = ExtResource("9_h4fw4")
+
+[connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
+[connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Button" to="." method="_on_button_pressed"]

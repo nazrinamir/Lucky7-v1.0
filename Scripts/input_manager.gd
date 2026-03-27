@@ -22,10 +22,10 @@ func set_slot_manager(value):
 
 func set_game_ref(value) -> void:
 	game_ref = value
-	print("game_ref assigned =", game_ref)
+	#print("game_ref assigned =", game_ref)
 	
 func _ready():
-	print("game_ref =", game_ref)
+	#print("game_ref =", game_ref)
 	discard_button.visible = false
 	swap_button.visible = false
 
@@ -64,8 +64,12 @@ func _on_slot_pressed(index: int):
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	print("slot pressed:", index)
+	#print("slot pressed:", index)
+	drawn_card_display.texture = null
+	discard_button.visible = false
+	swap_button.visible = false
 	
+	#update_discard_card_ui()
 
 func _on_swap_pressed():
 	if game_ref == null:
@@ -107,10 +111,12 @@ func update_discard_card_ui():
 	var top_card_discard = game_ref.get_top_discard()
 
 	if top_card_discard.is_empty():
-		discard_card_display.texture = null
+		discard_card_display.texture_normal = null
 		return
 
 	discard_card_display.texture_normal = top_card_discard["card"]["texture"]
+	
+	print(discard_card_display.texture_normal)
 
 func update_player_hand_ui():
 	if game_ref == null:
@@ -138,6 +144,11 @@ func get_discard_pile():
 		print("No discard card")
 	else:
 		print("Top discard asdasd:", top_card_discard)
+	
+func refresh_ui():
+	update_player_hand_ui()
+	update_discard_card_ui()
+	update_drawn_card_ui()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
