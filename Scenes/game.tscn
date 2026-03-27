@@ -79,7 +79,7 @@ offset_right = 540.0
 offset_bottom = 309.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=568644002]
-visible = false
+layer = 2
 
 [node name="UI" type="Control" parent="CanvasLayer" unique_id=1726963063]
 layout_mode = 3
@@ -89,16 +89,24 @@ offset_bottom = 40.0
 script = ExtResource("4_i6g32")
 
 [node name="Modal" parent="CanvasLayer/UI" unique_id=2393885 instance=ExtResource("4_3dryh")]
+visible = false
 layout_mode = 0
 script = ExtResource("5_wowpa")
 
 [node name="Button" type="Button" parent="CanvasLayer/UI" unique_id=512075566]
+visible = false
 layout_mode = 0
 offset_left = 521.0
 offset_top = 420.0
 offset_right = 624.0
 offset_bottom = 451.0
 text = "Open Modal"
+
+[node name="UIChoosePlayer" type="Control" parent="CanvasLayer" unique_id=689285707]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="InputManager" type="Node2D" parent="." unique_id=353262635]
 script = ExtResource("8_v158k")
