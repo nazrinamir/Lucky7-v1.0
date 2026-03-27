@@ -24,23 +24,6 @@ const CARD_VALUES := {
 
 var deck: Array = []
 
-#func _input(event: InputEvent) -> void:
-	#if event is InputEventMouseButton and event.button_index ==  MOUSE_BUTTON_LEFT:
-		#if event.is_pressed():
-			#raycast_check_for_deck()
-		#else:
-			#print("Release")
-			
-
-#func raycast_check_for_deck():
-	#var space_state = get_world_2d().direct_space_state
-	#var parameters = PhysicsPointQueryParameters2D.new()
-	#parameters.position = get_global_mouse_position()
-	#parameters.collide_with_areas = true
-	#parameters.collision_mask = 1
-	#var result = space_state.intersect_point(parameters)
-	#print("Click " + str(result[0].collider))
-
 # Called when the node enters the scene tree for the first time.
 #func _ready() -> void:
 	#create_deck()
