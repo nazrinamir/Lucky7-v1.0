@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://1v4qbbyx6gfg" path="res://Scripts/UI Scripts/modal.gd" id="5_wowpa"]
 [ext_resource type="Script" uid="uid://o1a1xft4uljk" path="res://Scripts/input_manager.gd" id="8_v158k"]
 [ext_resource type="Script" uid="uid://djgsar5bqw1u7" path="res://Scripts/UI Scripts/slot_manager.gd" id="9_h4fw4"]
-[ext_resource type="Script" uid="uid://c6takl841wlt2" path="res://Scripts/UI Scripts/tween_manager.gd" id="10_ldgsr"]
 
 [node name="Game" type="Node2D" unique_id=1830425454]
 script = ExtResource("1_wrm1d")
@@ -27,10 +26,7 @@ offset_right = 604.0
 offset_bottom = 268.0
 
 [node name="DiscardSlot" parent="." unique_id=372584211 instance=ExtResource("3_wrm1d")]
-offset_left = 508.0
-offset_top = 268.0
-offset_right = 508.0
-offset_bottom = 268.0
+position = Vector2(508, 268)
 
 [node name="CardCanvasLayer" type="CanvasLayer" parent="." unique_id=1377791744]
 
@@ -42,18 +38,10 @@ offset_bottom = 40.0
 
 [node name="DrawnCard" type="TextureRect" parent="CardCanvasLayer/UICard" unique_id=142591384]
 layout_mode = 0
-offset_left = 703.0
-offset_top = 724.0
-offset_right = 897.0
-offset_bottom = 1035.0
-
-[node name="PowerButton" type="Button" parent="CardCanvasLayer/UICard" unique_id=2044825035]
-layout_mode = 0
-offset_left = 900.0
-offset_top = 232.0
-offset_right = 1003.0
-offset_bottom = 277.0
-text = "USE ME!"
+offset_left = 685.0
+offset_top = 171.0
+offset_right = 879.0
+offset_bottom = 482.0
 
 [node name="DiscardButton" type="Button" parent="CardCanvasLayer/UICard" unique_id=1620768347]
 layout_mode = 0
@@ -79,7 +67,7 @@ offset_right = 540.0
 offset_bottom = 309.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=568644002]
-layer = 2
+visible = false
 
 [node name="UI" type="Control" parent="CanvasLayer" unique_id=1726963063]
 layout_mode = 3
@@ -89,24 +77,16 @@ offset_bottom = 40.0
 script = ExtResource("4_i6g32")
 
 [node name="Modal" parent="CanvasLayer/UI" unique_id=2393885 instance=ExtResource("4_3dryh")]
-visible = false
 layout_mode = 0
 script = ExtResource("5_wowpa")
 
 [node name="Button" type="Button" parent="CanvasLayer/UI" unique_id=512075566]
-visible = false
 layout_mode = 0
 offset_left = 521.0
 offset_top = 420.0
 offset_right = 624.0
 offset_bottom = 451.0
 text = "Open Modal"
-
-[node name="UIChoosePlayer" type="Control" parent="CanvasLayer" unique_id=689285707]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="InputManager" type="Node2D" parent="." unique_id=353262635]
 script = ExtResource("8_v158k")
@@ -221,9 +201,6 @@ alignment = 1
 
 [node name="SlotManager" type="Node2D" parent="." unique_id=543557861]
 script = ExtResource("9_h4fw4")
-
-[node name="TweenManager" type="Node2D" parent="." unique_id=1320143771]
-script = ExtResource("10_ldgsr")
 
 [connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
 [connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]

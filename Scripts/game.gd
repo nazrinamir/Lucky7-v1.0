@@ -2,6 +2,8 @@ extends Node2D
 
 @onready var game_manager := GameManager.new()
 @onready var input_manager := $InputManager
+@onready var slot_manager = $SlotManager
+
 
 var room_id: String = ""
 var game_loaded := false
@@ -51,6 +53,9 @@ func _ready() -> void:
 	else:
 		print("No room_id, fallback start_game()")
 		game_manager.start_game()
+	input_manager.set_game_ref(game_manager)
+	input_manager.set_slot_manager(slot_manager)
+	slot_manager.set_game_ref(game_manager)
 
 	game_loaded = true
 
