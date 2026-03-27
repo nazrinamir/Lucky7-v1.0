@@ -52,9 +52,9 @@ var selected_target_player_index: int = -1
 var selected_own_hand_index_for_j: int = -1
 
 
-func _ready() -> void:
-	print("GameManager ready:", self)
-	start_game()
+#func _ready() -> void:
+	#print("GameManager ready:", self)
+	#start_game()
 
 
 # =========================

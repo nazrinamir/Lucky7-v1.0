@@ -1,8 +1,6 @@
 extends Node
 class_name InputManager
 
-var game_ref
-
 const BACK_CARD=preload("res://Assets/Red-Cover.png")
 
 @onready var deck = $"../Deck/Area2D"
@@ -16,6 +14,12 @@ const BACK_CARD=preload("res://Assets/Red-Cover.png")
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3", 
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"]
 
+var game_ref = null
+
+func set_game_ref(value) -> void:
+	game_ref = value
+	print("game_ref assigned =", game_ref)
+	
 func _ready():
 	print("game_ref =", game_ref)
 	discard_button.visible = false
