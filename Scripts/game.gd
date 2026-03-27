@@ -1,9 +1,13 @@
 extends Node2D
 
 @onready var game_manager := GameManager.new()
+@onready var input_manager := $InputManager
 
 func _ready():
+	game_manager.name = "GameManager"
 	add_child(game_manager)
+
+	input_manager.game_ref = game_manager
 
 func _input(event):
 	if event.is_action_pressed("draw_card"):

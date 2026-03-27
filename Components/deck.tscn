@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmiw60sjohcoi"]
+[gd_scene format=3 uid="uid://cmiw60sjohcoi"]
 
-[ext_resource type="Script" uid="uid://cy4dug6rarqnt" path="res://Components/deck.gd" id="1_0r3cw"]
+[ext_resource type="Script" path="res://Components/deck.gd" id="1_0r3cw"]
 [ext_resource type="Texture2D" uid="uid://csk5y2dxyjhlx" path="res://Assets/Red-Cover.png" id="1_0tl26"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0r3cw"]
@@ -9,7 +9,7 @@ size = Vector2(65, 88)
 [sub_resource type="LabelSettings" id="LabelSettings_0tl26"]
 font_color = Color(0, 0, 0, 1)
 
-[node name="Deck" type="TextureButton"]
+[node name="Deck" type="TextureButton" unique_id=1878598173]
 
 [node name="DeckImage" type="Sprite2D" parent="." unique_id=2067501164]
 texture = ExtResource("1_0tl26")
@@ -22,14 +22,14 @@ texture = ExtResource("1_0tl26")
 position = Vector2(-5, -5)
 texture = ExtResource("1_0tl26")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1440473362]
 script = ExtResource("1_0r3cw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1525631175]
 position = Vector2(-2.5, -1)
 shape = SubResource("RectangleShape2D_0r3cw")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=616880911]
 layout_mode = 0
 offset_left = -24.0
 offset_top = -14.0
