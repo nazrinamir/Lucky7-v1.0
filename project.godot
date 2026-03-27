@@ -19,6 +19,10 @@ run/main_scene="uid://brf481px7tfve"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+MPManager="*uid://xiw3l08uaflc"
+
 [input]
 
 draw_card={

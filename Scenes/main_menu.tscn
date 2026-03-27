@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_28flt"]
 [ext_resource type="Script" uid="uid://clpnku5kpvbgk" path="res://Scenes/main_menu.gd" id="1_48xlc"]
-[ext_resource type="Script" uid="uid://xiw3l08uaflc" path="res://Scripts/Multiplayer/multiplayer_manager.gd" id="3_1ehe0"]
 
 [node name="MainMenu" type="Control" unique_id=2027069872]
 layout_mode = 3
@@ -47,7 +46,23 @@ text = "Settings"
 layout_mode = 2
 text = "Quit"
 
-[node name="MultiplayerManager" type="Node2D" parent="." unique_id=1097905476]
-script = ExtResource("3_1ehe0")
+[node name="HostButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1993789738]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1857457382]
+layout_mode = 2
+text = "Join"
+
+[node name="Button3" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1240896176]
+layout_mode = 2
+
+[node name="AddressInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=1736507987]
+layout_mode = 2
+placeholder_text = "127.0.0.1"
+
+[node name="PortInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=2081259738]
+layout_mode = 2
+placeholder_text = "7777"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
