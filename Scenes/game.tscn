@@ -42,10 +42,10 @@ offset_bottom = 40.0
 
 [node name="DrawnCard" type="TextureRect" parent="CardCanvasLayer/UICard" unique_id=142591384]
 layout_mode = 0
-offset_left = 674.0
-offset_top = 713.0
-offset_right = 868.0
-offset_bottom = 1024.0
+offset_left = 703.0
+offset_top = 724.0
+offset_right = 897.0
+offset_bottom = 1035.0
 
 [node name="PowerButton" type="Button" parent="CardCanvasLayer/UICard" unique_id=2044825035]
 layout_mode = 0

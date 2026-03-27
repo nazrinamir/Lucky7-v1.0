@@ -109,7 +109,8 @@ func _on_take_discard_card_pressed():
 		return
 	
 	game_ref.apply_command({"type":"take_discard"})
-	
+	drawn_card_display.position = drawn_card_start_position
+	tween_manager.slide_card_down(drawn_card_display)
 	refresh_ui()
 
 func update_drawn_card_ui():
