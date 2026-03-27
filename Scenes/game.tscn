@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://brf481px7tfve"]
+[gd_scene format=3 uid="uid://brf481px7tfve"]
 
 [ext_resource type="PackedScene" uid="uid://cmiw60sjohcoi" path="res://Components/deck.tscn" id="1_ebmjs"]
 [ext_resource type="Script" uid="uid://cmq08nfq5pm4n" path="res://Scripts/game.gd" id="1_wrm1d"]
-[ext_resource type="PackedScene" uid="uid://d1lnoxtxy0pgo" path="res://Components/discard_slot.tscn" id="3_wrm1d"]
+[ext_resource type="PackedScene" path="res://Components/discard_slot.tscn" id="3_wrm1d"]
 [ext_resource type="PackedScene" uid="uid://bivtsima3542k" path="res://Scenes/UI/modal.tscn" id="4_3dryh"]
 [ext_resource type="Script" uid="uid://el1vfo8up0ed" path="res://Scripts/UI Scripts/UI.gd" id="4_i6g32"]
 [ext_resource type="Script" uid="uid://1v4qbbyx6gfg" path="res://Scripts/UI Scripts/modal.gd" id="5_wowpa"]
@@ -15,26 +15,26 @@ offset_right = 1161.0
 offset_bottom = 656.0
 color = Color(0.278009, 0.518599, 0.290759, 1)
 
-[node name="Deck" parent="." instance=ExtResource("1_ebmjs")]
+[node name="Deck" parent="." unique_id=1218813740 instance=ExtResource("1_ebmjs")]
 position = Vector2(604, 268)
 
-[node name="DiscardSlot" parent="." instance=ExtResource("3_wrm1d")]
+[node name="DiscardSlot" parent="." unique_id=977213415 instance=ExtResource("3_wrm1d")]
 position = Vector2(525, 269)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=272416296]
 
-[node name="UI" type="Control" parent="CanvasLayer"]
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=264614493]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("4_i6g32")
 
-[node name="Modal" parent="CanvasLayer/UI" instance=ExtResource("4_3dryh")]
+[node name="Modal" parent="CanvasLayer/UI" unique_id=1085162493 instance=ExtResource("4_3dryh")]
+layout_mode = 0
 script = ExtResource("5_wowpa")
 
-[node name="Button" type="Button" parent="CanvasLayer/UI"]
+[node name="Button" type="Button" parent="CanvasLayer/UI" unique_id=348558572]
 layout_mode = 0
 offset_left = 521.0
 offset_top = 420.0

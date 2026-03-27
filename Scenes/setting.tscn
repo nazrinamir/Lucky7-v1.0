@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://b1roepuyohuhp"]
+[gd_scene format=3 uid="uid://b1roepuyohuhp"]
 
 [ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_h44gi"]
 
