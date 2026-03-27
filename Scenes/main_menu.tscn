@@ -22,10 +22,10 @@ anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 813.0
-offset_top = 265.0
-offset_right = 1058.0
-offset_bottom = 366.0
+offset_left = 808.0
+offset_top = 105.0
+offset_right = 1053.0
+offset_bottom = 358.0
 grow_horizontal = 0
 grow_vertical = 2
 
@@ -54,8 +54,9 @@ text = "Host"
 layout_mode = 2
 text = "Join"
 
-[node name="Button3" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1240896176]
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1240896176]
 layout_mode = 2
+text = "Start"
 
 [node name="AddressInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=1736507987]
 layout_mode = 2

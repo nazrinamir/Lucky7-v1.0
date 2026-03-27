@@ -185,15 +185,17 @@ func get_top_discard() -> Dictionary:
 # =========================
 # MAIN TURN ACTIONS
 # =========================
-func draw_from_deck() -> void:
+func draw_from_deck() -> Dictionary:
 	if not move_validator.can_draw_card(self):
-		log_message(["You cannot draw right now."])
-		return
+		var error = "You cannot draw right now."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	var card = deck_manager.draw_card()
 	if card.is_empty():
-		log_message(["Draw pile is empty."])
-		return
+		var error = "Draw pile is empty."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	current_drawn_card = card
 	turn_phase = PHASE_ACTION
@@ -205,16 +207,22 @@ func draw_from_deck() -> void:
 		deck_manager.format_card(current_drawn_card)
 	])
 	log_state()
-	
+
 	record_event("draw_from_deck", {
 		"card": deck_manager.format_card(current_drawn_card)
 	})
 
+	return {
+		"ok": true,
+		"message": "Drew card"
+	}
 
-func take_discard() -> void:
+
+func take_discard() -> Dictionary:
 	if not move_validator.can_take_discard(self):
-		log_message(["You cannot take discard right now."])
-		return
+		var error = "You cannot take discard right now."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	current_drawn_card = discard_pile.pop_back()["card"]
 	turn_phase = PHASE_ACTION
@@ -230,12 +238,18 @@ func take_discard() -> void:
 	record_event("take_discard", {
 		"card": deck_manager.format_card(current_drawn_card)
 	})
+	
+	return {
+		"ok": true,
+		"message": "Took discard"
+	}
 
 
-func discard_current_card() -> void:
+func discard_current_card() -> Dictionary:
 	if not move_validator.can_discard_current_card(self):
-		log_message(["You cannot discard right now."])
-		return
+		var error = "You cannot discard right now."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	push_to_discard(current_drawn_card, true)
 
@@ -251,12 +265,18 @@ func discard_current_card() -> void:
 
 	current_drawn_card = {}
 	finalize_turn_after_action()
+
+	return {
+		"ok": true,
+		"message": "Discarded card"
+	}
 	
 
-func swap_with_hand(hand_index: int) -> void:
+func swap_with_hand(hand_index: int) -> Dictionary:
 	if not move_validator.can_swap(self, current_player_index, hand_index):
-		log_message(["You cannot swap right now."])
-		return
+		var error = "You cannot swap right now."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	var old_card = player_manager.swap_with_hand(
 		players,
@@ -266,8 +286,9 @@ func swap_with_hand(hand_index: int) -> void:
 	)
 
 	if old_card.is_empty():
-		log_message(["Invalid swap or card is locked."])
-		return
+		var error = "Invalid swap or card is locked."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	push_to_discard(old_card, true)
 
@@ -282,7 +303,7 @@ func swap_with_hand(hand_index: int) -> void:
 		"swapped out:",
 		deck_manager.format_card(old_card)
 	])
-	
+
 	record_event("swap_with_hand", {
 		"slot_index": hand_index,
 		"new_card": deck_manager.format_card(players[current_player_index]["hand"][hand_index]["card"]),
@@ -291,6 +312,11 @@ func swap_with_hand(hand_index: int) -> void:
 
 	current_drawn_card = {}
 	finalize_turn_after_action()
+
+	return {
+		"ok": true,
+		"message": "Swapped with hand"
+	}
 
 
 func finalize_turn_after_action() -> void:
@@ -302,10 +328,11 @@ func finalize_turn_after_action() -> void:
 # =========================
 # POWER CARD FLOW
 # =========================
-func play_power_card() -> void:
+func play_power_card() -> Dictionary:
 	if not move_validator.can_play_power_card(self):
-		log_message(["You cannot play a power card right now."])
-		return
+		var error = "You cannot play a power card right now."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	active_power_card = current_drawn_card
 	current_drawn_card = {}
@@ -327,6 +354,11 @@ func play_power_card() -> void:
 
 	turn_phase = PHASE_POWER_ACTION
 	log_message(["Waiting for power action input for:", pending_power_effect])
+	
+	return {
+		"ok": true,
+		"message": "Played power card"
+	}
 
 
 func get_power_card_type(card: Dictionary) -> String:
@@ -475,77 +507,108 @@ func resolve_j_with_target(target_player_index: int, target_hand_index: int) -> 
 	finish_power_card_resolution()
 
 
-func handle_player_input(player_index: int) -> void:
+func handle_player_input(player_index: int) -> Dictionary:
 	if turn_phase != PHASE_POWER_ACTION:
-		log_message(["Player selection is only used during power actions."])
-		return
+		var error = "Player selection is only used during power actions."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	if not is_valid_player_index(player_index):
-		log_message(["Invalid player selection."])
-		return
+		var error = "Invalid player selection."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	match pending_power_effect:
 		POWER_Q:
 			if resolve_q_effect(player_index):
 				finish_power_card_resolution()
+				return {"ok": true, "message": "Player selected"}
+			return {"ok": false, "error": "Q effect failed"}
 
 		POWER_JOKER:
 			if resolve_joker_effect(player_index):
 				finish_power_card_resolution()
+				return {"ok": true, "message": "Player selected"}
+			return {"ok": false, "error": "Joker effect failed"}
 
 		POWER_J, POWER_K:
 			selected_target_player_index = player_index
 			log_message(["Selected target player:", players[player_index]["name"]])
+			return {"ok": true, "message": "Target player selected"}
 
 		_:
-			log_message(["This power card does not use player selection."])
+			var error = "This power card does not use player selection."
+			log_message([error])
+			return {"ok": false, "error": error}
 
 
-func handle_slot_input(slot_index: int) -> void:
+func handle_slot_input(slot_index: int) -> Dictionary:
 	if turn_phase == PHASE_POWER_ACTION:
-		handle_power_action_slot(slot_index)
-	else:
-		swap_with_hand(slot_index)
+		return handle_power_action_slot(slot_index)
+	return swap_with_hand(slot_index)
 
 
-func handle_power_action_slot(slot_index: int) -> void:
+func handle_power_action_slot(slot_index: int) -> Dictionary:
 	match pending_power_effect:
 		POWER_J:
-			handle_j_power_slot(slot_index)
+			return handle_j_power_slot(slot_index)
 
 		POWER_K:
 			if selected_target_player_index == -1:
-				log_message(["Select a target player for K first."])
-				return
+				var error = "No target player selected for K."
+				log_message([error])
+				return {"ok": false, "error": error}
 
-			if resolve_k_effect(selected_target_player_index, slot_index):
-				clear_power_target()
-				finish_power_card_resolution()
+			if not is_valid_hand_index(selected_target_player_index, slot_index):
+				var error = "Invalid target slot selection."
+				log_message([error])
+				return {"ok": false, "error": error}
 
-		POWER_Q:
-			log_message(["Q needs player selection, not slot selection."])
+			var success = resolve_k_effect(selected_target_player_index, slot_index)
+			if not success:
+				var error = "K effect failed."
+				log_message([error])
+				return {"ok": false, "error": error}
 
-		POWER_JOKER:
-			log_message(["Joker needs player selection, not slot selection."])
+			finish_power_card_resolution()
+			return {"ok": true, "message": "K effect resolved"}
 
 		_:
-			log_message(["Unknown power action."])
+			var error = "This power card does not use slot selection."
+			log_message([error])
+			return {"ok": false, "error": error}
 
 
-func handle_j_power_slot(slot_index: int) -> void:
+func handle_j_power_slot(slot_index: int) -> Dictionary:
 	if selected_own_hand_index_for_j == -1:
+		if not is_valid_hand_index(current_player_index, slot_index):
+			var error = "Invalid own slot selection."
+			log_message([error])
+			return {"ok": false, "error": error}
+
 		selected_own_hand_index_for_j = slot_index
 		log_message(["Selected your own slot for J:", slot_index])
-		return
+		return {"ok": true, "message": "Own J slot selected"}
 
 	if selected_target_player_index == -1:
-		log_message(["Select a target player for J first."])
-		return
+		var error = "Select a target player for J first."
+		log_message([error])
+		return {"ok": false, "error": error}
+
+	if not is_valid_hand_index(selected_target_player_index, slot_index):
+		var error = "Invalid target slot selection."
+		log_message([error])
+		return {"ok": false, "error": error}
 
 	if resolve_j_effect(selected_own_hand_index_for_j, selected_target_player_index, slot_index):
 		clear_j_selection()
 		clear_power_target()
 		finish_power_card_resolution()
+		return {"ok": true, "message": "J effect resolved"}
+
+	var error = "J effect failed."
+	log_message([error])
+	return {"ok": false, "error": error}
 
 
 # =========================
@@ -613,40 +676,29 @@ func apply_command(command: Dictionary) -> Dictionary:
 	})
 
 	var command_type = command.get("type", "")
-	var result := {
-		"ok": true,
-		"message": "",
-		"type": command_type
-	}
+	var result: Dictionary = {}
 
 	match command_type:
 		"draw_card":
-			draw_from_deck()
-			result["message"] = "Drew card"
+			result = draw_from_deck()
 
 		"take_discard":
-			take_discard()
-			result["message"] = "Took discard"
+			result = take_discard()
 
 		"discard_card":
-			discard_current_card()
-			result["message"] = "Discarded card"
+			result = discard_current_card()
 
 		"swap_with_hand":
-			swap_with_hand(command["slot_index"])
-			result["message"] = "Swapped with hand"
+			result = swap_with_hand(command["slot_index"])
 
 		"play_power_card":
-			play_power_card()
-			result["message"] = "Played power card"
+			result = play_power_card()
 
 		"select_player":
-			handle_player_input(command["player_index"])
-			result["message"] = "Player selected"
+			result = handle_player_input(command["player_index"])
 
 		"select_slot":
-			handle_slot_input(command["slot_index"])
-			result["message"] = "Slot selected"
+			result = handle_slot_input(command["slot_index"])
 
 		_:
 			log_message(["Unknown command:", command_type])
@@ -655,9 +707,15 @@ func apply_command(command: Dictionary) -> Dictionary:
 				"error": "Unknown command type"
 			}
 
+	if not result.get("ok", false):
+		emit_signal("command_failed", result.get("error", "Command failed"))
+		return result
+
+	result["type"] = command_type
 	emit_signal("command_executed", result)
 	emit_signal("game_state_updated")
 	return result
+	
 # =========================
 # DEBUG
 # =========================
@@ -705,3 +763,6 @@ func get_player_slot_card(player_index: int, slot_index: int) -> Dictionary:
 	if slot.is_empty():
 		return {}
 	return slot["card"]
+	
+func get_current_player_index() -> int:
+	return current_player_index

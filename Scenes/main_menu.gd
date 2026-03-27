@@ -3,6 +3,7 @@ extends Control
 @onready var play_button = $CenterContainer/VBoxContainer/PlayButton
 @onready var host_button = $CenterContainer/VBoxContainer/HostButton
 @onready var join_button = $CenterContainer/VBoxContainer/JoinButton
+@onready var start_button = $CenterContainer/VBoxContainer/StartButton
 @onready var settings_button = $CenterContainer/VBoxContainer/SettingButton
 @onready var quit_button = $CenterContainer/VBoxContainer/QuitButton
 @onready var address_input: LineEdit = $CenterContainer/VBoxContainer/AddressInput
@@ -14,10 +15,12 @@ func _ready():
 	play_button.pressed.connect(_on_play_pressed)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
+	start_button.pressed.connect(_on_start_button_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 
-	MPManager.set_local_player("p1", "Player One")
+	var unique_id = str(Time.get_unix_time_from_system()) + "_" + str(randi() % 10000)
+	MPManager.set_local_player(unique_id, "Player " + unique_id)
 
 	MPManager.room_created.connect(_on_room_created)
 	MPManager.room_joined.connect(_on_room_joined)
@@ -31,7 +34,6 @@ func _ready():
 
 
 func _on_play_pressed():
-	# local single-player fallback
 	get_tree().change_scene_to_file("res://Scenes/game.tscn")
 
 
@@ -51,10 +53,17 @@ func _on_host_pressed():
 		return
 
 	current_room_id = create_result["room"]["room_id"]
+	print("Waiting for players before starting game")
 
-	var start_result = MPManager.host_start_game(current_room_id)
-	if not start_result["ok"]:
-		print(start_result["error"])
+
+func _on_start_button_pressed():
+	if current_room_id == "":
+		print("No room to start")
+		return
+
+	var result = MPManager.host_start_game(current_room_id)
+	if not result["ok"]:
+		print(result["error"])
 
 
 func _on_join_pressed():
@@ -91,12 +100,12 @@ func _on_room_joined(room_data: Dictionary) -> void:
 
 
 func _on_room_updated(room_data: Dictionary) -> void:
-	#print("Room updated:", room_data)
 	pass
 
 
 func _on_game_started(room_data: Dictionary) -> void:
 	current_room_id = room_data["room_id"]
+	print("Opening game scene for room:", current_room_id)
 
 	var game_scene = load("res://Scenes/game.tscn").instantiate()
 	game_scene.room_id = current_room_id
@@ -108,7 +117,6 @@ func _on_game_started(room_data: Dictionary) -> void:
 
 func _on_connected_to_server() -> void:
 	print("Connected to host/server")
-	# later: request room list or join room by code
 
 
 func _on_connection_failed() -> void:
