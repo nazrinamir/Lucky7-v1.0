@@ -14,7 +14,10 @@ func export_state(game_manager) -> Dictionary:
 		"pending_power_effect": game_manager.pending_power_effect,
 		"selected_target_player_index": game_manager.selected_target_player_index,
 		"selected_own_hand_index_for_j": game_manager.selected_own_hand_index_for_j,
-		"deck": game_manager.deck_manager.deck
+		"deck": game_manager.deck_manager.deck,
+		"turn_number": game_manager.turn_number,
+		"match_history": game_manager.match_history.get_events(),
+		"seed": game_manager.seed,
 	}
 
 func import_state(game_manager, data: Dictionary) -> void:
@@ -31,12 +34,25 @@ func import_state(game_manager, data: Dictionary) -> void:
 	game_manager.selected_own_hand_index_for_j = data.get("selected_own_hand_index_for_j", -1)
 
 	game_manager.deck_manager.deck = data.get("deck", [])
+	
+	game_manager.turn_number = data.get("turn_number", 1)
+	game_manager.match_history.clear()
+	
+	game_manager.seed = data.get("seed", 0)
+	game_manager.deck_manager.set_seed(game_manager.seed)
+
+	for event in data.get("match_history", []):
+		game_manager.match_history.add_event(event)
 
 func save_to_file(game_manager, path: String = "user://save.json") -> void:
 	var file = FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		print("Failed to open save file for writing")
+		return
+
 	var data = export_state(game_manager)
 	file.store_string(JSON.stringify(data))
-	file.close()
+	file.close() 
 
 func load_from_file(game_manager, path: String = "user://save.json") -> void:
 	if not FileAccess.file_exists(path):
@@ -44,9 +60,16 @@ func load_from_file(game_manager, path: String = "user://save.json") -> void:
 		return
 
 	var file = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		print("Failed to open save file for reading")
+		return
+
 	var content = file.get_as_text()
 	file.close()
 
 	var data = JSON.parse_string(content)
-	if typeof(data) == TYPE_DICTIONARY:
-		import_state(game_manager, data)
+	if typeof(data) != TYPE_DICTIONARY:
+		print("Save file is invalid JSON or not a dictionary")
+		return
+
+	import_state(game_manager, data)

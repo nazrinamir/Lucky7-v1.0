@@ -2,6 +2,8 @@
 extends RefCounted
 class_name DeckManager
 
+var rng := RandomNumberGenerator.new()
+
 const SHAPES := ["Clubs", "Diamonds", "Hearts", "Spades"]
 const RANKS := ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
@@ -104,7 +106,11 @@ func create_deck() -> Array:
 	return deck
 	
 func shuffle_deck() -> void:
-	deck.shuffle()
+	for i in range(deck.size() - 1, 0, -1):
+		var j = rng.randi_range(0, i)
+		var temp = deck[i]
+		deck[i] = deck[j]
+		deck[j] = temp
 
 func draw_card() -> Dictionary:
 	if deck.is_empty():
@@ -126,6 +132,8 @@ func format_card(card: Dictionary) -> String:
 		return card["id"]
 	return "%s of %s" % [card["rank"], card["shape"]]
 
+func set_seed(seed_value: int) -> void:
+	rng.seed = seed_value
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

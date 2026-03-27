@@ -5,6 +5,11 @@ var player_manager := PlayerManager.new()
 var score_manager := ScoreManager.new()
 var state_serializer := StateSerializer.new()
 var move_validator := MoveValidator.new()
+var match_history := MatchHistory.new()
+var command_validator := CommandValidator.new()
+
+var turn_number: int = 1
+var seed: int = 0
 
 const PHASE_CHOOSE_SOURCE := "choose_source"
 const PHASE_ACTION := "action"
@@ -19,6 +24,13 @@ const POWER_JOKER := "JOKER"
 var deck_manager := DeckManager.new()
 
 var DEBUG := true
+
+signal game_started
+signal game_state_updated
+signal turn_changed(current_player_index)
+signal command_executed(result)
+signal game_ended(winner_data)
+signal command_failed(error_message)
 
 # =========================
 # GAME STATE
@@ -51,7 +63,7 @@ func _ready() -> void:
 func log_message(parts: Array) -> void:
 	if not DEBUG:
 		return
-	prints(parts)
+	print(" ".join(parts.map(func(p): return str(p))))
 
 
 func log_state() -> void:
@@ -62,16 +74,42 @@ func log_state() -> void:
 # =========================
 # GAME SETUP
 # =========================
-func start_game(player_count: int = 4) -> void:
+func start_game(player_count: int = 4, seed: int = -1) -> void:
 	deck_manager.create_deck()
+
+	if seed == -1:
+		seed = Time.get_unix_time_from_system()
+
+	self.seed = seed
+	deck_manager.set_seed(self.seed)
 	deck_manager.shuffle_deck()
+
+	print("Game seed:", self.seed)
 
 	setup_players(player_count)
 	deal_initial_hands()
 	reset_runtime_state()
 
-	log_state()
+	match_history.clear()
+	turn_number = 1
+	
+	emit_signal("game_started")
+	emit_signal("game_state_updated")
 
+	log_state()
+	
+func record_event(action: String, extra: Dictionary = {}) -> void:
+	var event := {
+		"turn": turn_number,
+		"player_index": current_player_index,
+		"player_name": get_current_player().get("name", ""),
+		"action": action
+	}
+
+	for key in extra.keys():
+		event[key] = extra[key]
+
+	match_history.add_event(event)
 
 func setup_players(player_count: int) -> void:
 	players = player_manager.setup_players(player_count)
@@ -116,6 +154,7 @@ func load_game(path: String = "user://save.json") -> void:
 	state_serializer.load_from_file(self, path)
 	log_message(["Game loaded from", path])
 	log_state()
+	emit_signal("game_state_updated")
 
 
 # =========================
@@ -166,6 +205,10 @@ func draw_from_deck() -> void:
 		deck_manager.format_card(current_drawn_card)
 	])
 	log_state()
+	
+	record_event("draw_from_deck", {
+		"card": deck_manager.format_card(current_drawn_card)
+	})
 
 
 func take_discard() -> void:
@@ -183,6 +226,10 @@ func take_discard() -> void:
 		deck_manager.format_card(current_drawn_card)
 	])
 	log_state()
+	
+	record_event("take_discard", {
+		"card": deck_manager.format_card(current_drawn_card)
+	})
 
 
 func discard_current_card() -> void:
@@ -198,9 +245,13 @@ func discard_current_card() -> void:
 		deck_manager.format_card(current_drawn_card)
 	])
 
+	record_event("discard_current_card", {
+		"card": deck_manager.format_card(current_drawn_card)
+	})
+
 	current_drawn_card = {}
 	finalize_turn_after_action()
-
+	
 
 func swap_with_hand(hand_index: int) -> void:
 	if not move_validator.can_swap(self, current_player_index, hand_index):
@@ -231,6 +282,12 @@ func swap_with_hand(hand_index: int) -> void:
 		"swapped out:",
 		deck_manager.format_card(old_card)
 	])
+	
+	record_event("swap_with_hand", {
+		"slot_index": hand_index,
+		"new_card": deck_manager.format_card(players[current_player_index]["hand"][hand_index]["card"]),
+		"old_card": deck_manager.format_card(old_card)
+	})
 
 	current_drawn_card = {}
 	finalize_turn_after_action()
@@ -262,6 +319,11 @@ func play_power_card() -> void:
 		"played power card:",
 		deck_manager.format_card(active_power_card)
 	])
+
+	record_event("play_power_card", {
+		"card": deck_manager.format_card(active_power_card),
+		"power_type": pending_power_effect
+	})
 
 	turn_phase = PHASE_POWER_ACTION
 	log_message(["Waiting for power action input for:", pending_power_effect])
@@ -316,6 +378,15 @@ func resolve_j_effect(my_hand_index: int, target_player_index: int, target_hand_
 			players[target_player_index]["name"]
 		])
 
+		record_event("resolve_j_effect", {
+			"source_player_index": current_player_index,
+			"source_player_name": players[current_player_index]["name"],
+			"source_hand_index": my_hand_index,
+			"target_player_index": target_player_index,
+			"target_player_name": players[target_player_index]["name"],
+			"target_hand_index": target_hand_index
+		})
+
 	return success
 
 
@@ -328,6 +399,11 @@ func resolve_q_effect(target_player_index: int) -> bool:
 			"viewed cards of",
 			players[target_player_index]["name"]
 		])
+
+		record_event("resolve_q_effect", {
+			"target_player_index": target_player_index,
+			"target_player_name": players[target_player_index]["name"]
+		})
 
 	return success
 
@@ -342,6 +418,12 @@ func resolve_k_effect(target_player_index: int, target_hand_index: int) -> bool:
 			players[target_player_index]["name"]
 		])
 
+		record_event("resolve_k_effect", {
+			"target_player_index": target_player_index,
+			"target_player_name": players[target_player_index]["name"],
+			"target_hand_index": target_hand_index
+		})
+
 	return success
 
 
@@ -354,6 +436,11 @@ func resolve_joker_effect(target_player_index: int) -> bool:
 			"shuffled the hand positions of",
 			players[target_player_index]["name"]
 		])
+
+		record_event("resolve_joker_effect", {
+			"target_player_index": target_player_index,
+			"target_player_name": players[target_player_index]["name"]
+		})
 
 	return success
 
@@ -471,6 +558,11 @@ func next_turn() -> void:
 
 	log_message(["Next turn:", get_current_player()["name"]])
 	log_state()
+	
+	emit_signal("turn_changed", current_player_index)
+	emit_signal("game_state_updated")
+
+	turn_number += 1
 
 
 func clear_all_reveals() -> void:
@@ -480,8 +572,14 @@ func clear_all_reveals() -> void:
 func check_game_over() -> void:
 	if deck_manager.get_deck_count() == 0 and current_drawn_card.is_empty():
 		turn_phase = PHASE_GAME_OVER
+		var winner = score_manager.get_winner(players)
+
+		emit_signal("game_ended", winner)
+		emit_signal("game_state_updated")
+
 		log_message(["Game Over"])
 		print_final_results()
+
 
 
 # =========================
@@ -490,7 +588,76 @@ func check_game_over() -> void:
 func print_final_results() -> void:
 	score_manager.print_final_results(players)
 
+# =========================
+# HISTORY
+# =========================
+func apply_command(command: Dictionary) -> Dictionary:
+	var validation = command_validator.validate(command)
 
+	if not validation["ok"]:
+		log_message(["Invalid command:", validation["error"]])
+		emit_signal("command_failed", validation["error"])
+
+		record_event("invalid_command", {
+			"command": command.duplicate(true),
+			"error": validation["error"]
+		})
+
+		return {
+			"ok": false,
+			"error": validation["error"]
+		}
+
+	record_event("command_received", {
+		"command": command.duplicate(true)
+	})
+
+	var command_type = command.get("type", "")
+	var result := {
+		"ok": true,
+		"message": "",
+		"type": command_type
+	}
+
+	match command_type:
+		"draw_card":
+			draw_from_deck()
+			result["message"] = "Drew card"
+
+		"take_discard":
+			take_discard()
+			result["message"] = "Took discard"
+
+		"discard_card":
+			discard_current_card()
+			result["message"] = "Discarded card"
+
+		"swap_with_hand":
+			swap_with_hand(command["slot_index"])
+			result["message"] = "Swapped with hand"
+
+		"play_power_card":
+			play_power_card()
+			result["message"] = "Played power card"
+
+		"select_player":
+			handle_player_input(command["player_index"])
+			result["message"] = "Player selected"
+
+		"select_slot":
+			handle_slot_input(command["slot_index"])
+			result["message"] = "Slot selected"
+
+		_:
+			log_message(["Unknown command:", command_type])
+			return {
+				"ok": false,
+				"error": "Unknown command type"
+			}
+
+	emit_signal("command_executed", result)
+	emit_signal("game_state_updated")
+	return result
 # =========================
 # DEBUG
 # =========================
@@ -512,10 +679,29 @@ func print_game_state() -> void:
 		print("Current drawn card: None")
 	else:
 		print("Current drawn card: ", deck_manager.format_card(current_drawn_card))
-
+ 
 	if discard_pile.is_empty():
 		print("Top discard: None")
 	else:
 		print("Top discard: ", deck_manager.format_card(discard_pile[-1]["card"]))
 
 	print("------------------------")
+
+func get_game_snapshot() -> Dictionary:
+	return state_serializer.export_state(self)
+	
+func get_player_hand(player_index: int) -> Array:
+	if not is_valid_player_index(player_index):
+		return []
+	return players[player_index]["hand"]
+	
+func get_player_slot(player_index: int, slot_index: int) -> Dictionary:
+	if not is_valid_hand_index(player_index, slot_index):
+		return {}
+	return players[player_index]["hand"][slot_index]
+	
+func get_player_slot_card(player_index: int, slot_index: int) -> Dictionary:
+	var slot = get_player_slot(player_index, slot_index)
+	if slot.is_empty():
+		return {}
+	return slot["card"]
