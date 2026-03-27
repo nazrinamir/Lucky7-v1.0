@@ -82,7 +82,7 @@ offset_right = 980.0
 offset_bottom = 350.0
 text = "Swap"
 
-[node name="DiscardCard" type="TextureButton" parent="CardCanvasLayer/UICard" unique_id=419929398]
+[node name="DiscardCard" type="TextureRect" parent="CardCanvasLayer/UICard" unique_id=770612119]
 layout_mode = 0
 offset_left = 474.0
 offset_top = 218.0
