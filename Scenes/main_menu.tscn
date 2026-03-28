@@ -60,7 +60,8 @@ text = "Start"
 
 [node name="AddressInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=1736507987]
 layout_mode = 2
-placeholder_text = "127.0.0.1"
+text = "100.97.20.34"
+placeholder_text = "100.97.20.34"
 
 [node name="PortInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=2081259738]
 layout_mode = 2
