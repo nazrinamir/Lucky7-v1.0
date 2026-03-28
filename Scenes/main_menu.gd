@@ -41,6 +41,8 @@ func _on_host_pressed():
 	var port := get_port_value()
 
 	var host_result = MPManager.host_game(port)
+	print("host_result =", host_result)
+
 	if not host_result["ok"]:
 		print(host_result["error"])
 		return
@@ -48,6 +50,8 @@ func _on_host_pressed():
 	print("Hosting on port:", port)
 
 	var create_result = MPManager.create_room(4)
+	print("create_result =", create_result)
+
 	if not create_result["ok"]:
 		print(create_result["error"])
 		return
