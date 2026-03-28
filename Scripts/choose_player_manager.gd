@@ -68,6 +68,7 @@ func open_modal():
 		_:
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
+			update_discard_card()
 
 func on_player_selected(player_index: int):
 	print("Player selected:", player_index, "step:", flow_step)
@@ -106,6 +107,7 @@ func on_player_selected(player_index: int):
 			})
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
+			update_discard_card()
 
 		"king_player":
 			selected_player_index = player_index
@@ -124,6 +126,7 @@ func on_player_selected(player_index: int):
 			})
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
+			update_discard_card()
 
 func on_slot_selected(slot_index: int):
 	print("Slot selected:", slot_index, "step:", flow_step)
@@ -151,6 +154,7 @@ func on_slot_selected(slot_index: int):
 			})
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
+			update_discard_card()
 
 		"king_slot":
 			game_ref.apply_command({
@@ -159,3 +163,8 @@ func on_slot_selected(slot_index: int):
 			})
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
+			update_discard_card()
+
+func update_discard_card():
+	var top_card = game_ref.get_top_discard()
+	ui_ref.update_d_card(top_card)

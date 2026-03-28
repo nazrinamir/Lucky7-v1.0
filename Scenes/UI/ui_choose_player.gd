@@ -13,8 +13,12 @@ const CARD_DESCRIPTION = {
 
 @onready var TurnLabel = $"../../TurnCanvas/UITurnPanel/CenterContainer/TurnLabel"
 
+@onready var drawn_card = $"../../CardCanvasLayer/UICard/DrawnCard"
+@onready var power_button = $"../../CardCanvasLayer/UICard/PowerButton"
+@onready var discard_button = $"../../CardCanvasLayer/UICard/DiscardButton"
+@onready var swap_button = $"../../CardCanvasLayer/UICard/SwapButton"
+
 @onready var modal = $modal
-@onready var drawn_card_modal = $"../../CardCanvasLayer/UICard"
 @onready var p1_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player1
 @onready var p2_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player2
 @onready var p3_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player3
@@ -29,6 +33,8 @@ const CARD_DESCRIPTION = {
 @onready var slots = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2
 @onready var instruct_label = $modal/Panel/CenterContainer/VBoxContainer/Instruction
 @onready var power_label = $modal/Panel/CenterContainer/VBoxContainer/PowerCard
+
+@onready var discard_card_display = $"../../CardCanvasLayer/UICard/DiscardCard"
 
 func _ready():
 	modal.visible = false
@@ -60,7 +66,7 @@ func close_modal():
 		get_parent().visible = false
 
 func close_drawn_card_modal():
-	drawn_card_modal.visible = false
+	close_group_drawn_card()
 
 func show_player_selection():
 	buttons.visible = true
@@ -79,3 +85,12 @@ func set_power_description(rank: String):
 func set_turn_label(label:int):
 	TurnLabel.text = label
 	
+
+func close_group_drawn_card():
+	drawn_card.visible = false
+	power_button.visible = false
+	discard_button.visible = false
+	swap_button.visible = false
+
+func update_d_card(top_card_discard):
+	discard_card_display.texture_normal = top_card_discard["card"]["texture"]
