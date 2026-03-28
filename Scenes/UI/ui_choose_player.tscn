@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cil2208dm35fj"]
+
+[node name="UIChoosePlayer" type="Control" unique_id=1423122256]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="modal" type="Control" parent="." unique_id=124600618]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="modal" unique_id=544332392]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0020001
+anchor_bottom = 1.0020001
+offset_right = -0.30407715
+offset_bottom = -0.29608154
+
+[node name="CenterContainer" type="CenterContainer" parent="modal/Panel" unique_id=1839076289]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 3.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="modal/Panel/CenterContainer" unique_id=1618770609]
+layout_mode = 2
+alignment = 1
+
+[node name="Player1" type="Button" parent="modal/Panel/CenterContainer/HBoxContainer" unique_id=1963574945]
+modulate = Color(0.97551066, 0.36518097, 0.3087498, 1)
+layout_mode = 2
+text = "P1"
+
+[node name="Player2" type="Button" parent="modal/Panel/CenterContainer/HBoxContainer" unique_id=839329974]
+modulate = Color(0.71748894, 0.39526242, 0.9027352, 1)
+layout_mode = 2
+text = "P2"
+
+[node name="Player3" type="Button" parent="modal/Panel/CenterContainer/HBoxContainer" unique_id=1119926454]
+modulate = Color(0.22121578, 0.49337113, 0.45691407, 1)
+layout_mode = 2
+text = "P3"
+
+[node name="Player4" type="Button" parent="modal/Panel/CenterContainer/HBoxContainer" unique_id=1033763465]
+modulate = Color(0.7216109, 0.7109991, 0.38213968, 1)
+layout_mode = 2
+text = "P4"
