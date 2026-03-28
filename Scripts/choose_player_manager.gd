@@ -1,6 +1,8 @@
 extends Node2D
 class_name ChoosePlayerManager
 
+
+
 var game_ref
 var ui_ref
 
@@ -20,7 +22,9 @@ func open_modal():
 
 	if ui_ref.get_parent():
 		ui_ref.get_parent().visible = true
-
+		
+	#ui_ref.identify_card_flow(game_ref.current_drawn_card.rank)
+	
 	ui_ref.open_modal()
 
 func on_player_selected(player_index: int):
@@ -35,4 +39,3 @@ func on_player_selected(player_index: int):
 		"player_index": player_index
 	})
 	
-	ui_ref.close_modal()
