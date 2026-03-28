@@ -39,6 +39,10 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 20
 
+[node name="PowerCard" type="Label" parent="modal/Panel/CenterContainer/VBoxContainer" unique_id=496005796]
+layout_mode = 2
+horizontal_alignment = 1
+
 [node name="Instruction" type="Label" parent="modal/Panel/CenterContainer/VBoxContainer" unique_id=871967261]
 layout_mode = 2
 horizontal_alignment = 1
@@ -71,6 +75,7 @@ layout_mode = 2
 text = "P4"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer" unique_id=1114600473]
+visible = false
 layout_mode = 2
 
 [node name="Slot1" type="TextureButton" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2" unique_id=2025918242]

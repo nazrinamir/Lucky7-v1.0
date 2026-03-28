@@ -13,6 +13,12 @@
 [ext_resource type="PackedScene" uid="uid://cil2208dm35fj" path="res://Scenes/UI/ui_choose_player.tscn" id="11_o5yvi"]
 [ext_resource type="Script" uid="uid://ddjj2s5q1oh8k" path="res://Scenes/UI/ui_choose_player.gd" id="12_rfjv2"]
 [ext_resource type="Script" uid="uid://dbmoxc6krylue" path="res://Scripts/choose_player_manager.gd" id="12_rku1e"]
+[ext_resource type="Script" uid="uid://dtdde5p6w13e0" path="res://Scripts/UI Scripts/ui_turn_panel.gd" id="14_1phco"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rfjv2"]
+font_size = 39
+outline_size = 7
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Game" type="Node2D" unique_id=1830425454]
 script = ExtResource("1_wrm1d")
@@ -238,6 +244,30 @@ script = ExtResource("12_rfjv2")
 
 [node name="ChoosePlayerManager" type="Node2D" parent="." unique_id=104218542]
 script = ExtResource("12_rku1e")
+
+[node name="TurnCanvas" type="CanvasLayer" parent="." unique_id=2099088581]
+
+[node name="UITurnPanel" type="Panel" parent="TurnCanvas" unique_id=1024323510]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 102.0
+offset_bottom = 102.0
+script = ExtResource("14_1phco")
+
+[node name="CenterContainer" type="CenterContainer" parent="TurnCanvas/UITurnPanel" unique_id=1986836955]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TurnLabel" type="Label" parent="TurnCanvas/UITurnPanel/CenterContainer" unique_id=656580434]
+layout_mode = 2
+text = "XX"
+label_settings = SubResource("LabelSettings_rfjv2")
+horizontal_alignment = 1
+uppercase = true
 
 [connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
 [connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]

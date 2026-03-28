@@ -2,8 +2,21 @@ extends Control
 class_name UIChoosePlayer
 
 signal player_selected(player_index: int)
+signal slot_selected(slot_index: int)
 
-const POWER_CARD = ["J","Q","K","JOKER",]
+const CARD_DESCRIPTION = {
+	"J": "Choose two players and two slots to swap cards",
+	"Q": "Choose a player to view a card",
+	"K": "Choose a player and a slot to lock",
+	"JOKER": "Choose a player to shuffle their slots"
+}
+
+@onready var TurnLabel = $"../../TurnCanvas/UITurnPanel/CenterContainer/TurnLabel"
+
+@onready var drawn_card = $"../../CardCanvasLayer/UICard/DrawnCard"
+@onready var power_button = $"../../CardCanvasLayer/UICard/PowerButton"
+@onready var discard_button = $"../../CardCanvasLayer/UICard/DiscardButton"
+@onready var swap_button = $"../../CardCanvasLayer/UICard/SwapButton"
 
 @onready var modal = $modal
 @onready var p1_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player1
@@ -11,10 +24,17 @@ const POWER_CARD = ["J","Q","K","JOKER",]
 @onready var p3_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player3
 @onready var p4_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player4
 
+@onready var s1_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2/Slot1
+@onready var s2_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2/Slot2
+@onready var s3_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2/Slot3
+@onready var s4_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2/Slot4
+
 @onready var buttons = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer
 @onready var slots = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2
 @onready var instruct_label = $modal/Panel/CenterContainer/VBoxContainer/Instruction
+@onready var power_label = $modal/Panel/CenterContainer/VBoxContainer/PowerCard
 
+@onready var discard_card_display = $"../../CardCanvasLayer/UICard/DiscardCard"
 
 func _ready():
 	modal.visible = false
@@ -25,29 +45,10 @@ func _ready():
 	p3_button.pressed.connect(func(): player_selected.emit(2))
 	p4_button.pressed.connect(func(): player_selected.emit(3))
 
-func identify_card_flow(rank):
-	if rank == "J":
-		jack_flow()
-	elif rank == "Q":
-		queen_flow()
-	elif rank == "K":
-		king_flow()
-	elif rank == "JOKER":
-		joker_flow()
-	else:
-		return
-
-func joker_flow():
-	pass
-
-func king_flow():
-	pass
-
-func queen_flow():
-	pass
-
-func jack_flow():
-	pass
+	s1_button.pressed.connect(func(): slot_selected.emit(0))
+	s2_button.pressed.connect(func(): slot_selected.emit(1))
+	s3_button.pressed.connect(func(): slot_selected.emit(2))
+	s4_button.pressed.connect(func(): slot_selected.emit(3))
 
 func open_modal():
 	if get_parent():
@@ -55,9 +56,7 @@ func open_modal():
 
 	visible = true
 	modal.visible = true
-	instruct_label.text = "Select Player"
-	buttons.visible = true
-	slots.visible = false
+	show_player_selection()
 
 func close_modal():
 	modal.visible = false
@@ -66,7 +65,32 @@ func close_modal():
 	if get_parent():
 		get_parent().visible = false
 
-func show_slot():
-	instruct_label.text = "Select Slot"
+func close_drawn_card_modal():
+	close_group_drawn_card()
+
+func show_player_selection():
+	buttons.visible = true
+	slots.visible = false
+
+func show_slot_selection():
 	buttons.visible = false
 	slots.visible = true
+
+func set_instruction(text: String):
+	instruct_label.text = text
+
+func set_power_description(rank: String):
+	power_label.text = CARD_DESCRIPTION.get(rank, rank)
+
+func set_turn_label(label:int):
+	TurnLabel.text = label
+	
+
+func close_group_drawn_card():
+	drawn_card.visible = false
+	power_button.visible = false
+	discard_button.visible = false
+	swap_button.visible = false
+
+func update_d_card(top_card_discard):
+	discard_card_display.texture_normal = top_card_discard["card"]["texture"]

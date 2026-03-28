@@ -7,6 +7,8 @@ extends Node2D
 @onready var cp_manager = $ChoosePlayerManager
 @onready var ui_choose_player = $CPCanvasLayer/UIChoosePlayer
 
+@onready var ui_turn_panel = $TurnCanvas/UITurnPanel
+
 var room_id: String = ""
 var game_loaded := false
 var waiting_for_snapshot := false
@@ -27,18 +29,21 @@ func _ready() -> void:
 
 	game_loaded = true
 	set_game_ref_to_child()
-
-	
+	game_manager.turn_changed.connect(ui_turn_panel._on_turn_changed)
 
 func set_game_ref_to_child():
 	input_manager.set_game_ref(game_manager)
 	input_manager.set_slot_manager(slot_manager)
 	slot_manager.set_game_ref(game_manager)
+	ui_turn_panel.set_game_ref(game_manager)
 
 	cp_manager.set_game_ref(game_manager)
 	cp_manager.set_ui_ref(ui_choose_player)
 
 	ui_choose_player.player_selected.connect(cp_manager.on_player_selected)
+	ui_choose_player.slot_selected.connect(cp_manager.on_slot_selected)
+
+	ui_turn_panel.set_game_ref(game_manager)
 
 
 func _exit_tree() -> void:
