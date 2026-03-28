@@ -5,8 +5,9 @@ const BACK_CARD=preload("res://Assets/Red-Cover.png")
 
 @onready var tween_manager = $"../TweenManager"
 @onready var mp_manaager = $"../Multiplayer/multiplayer_manager.gd"
-
 @onready var slot_manager = $"../SlotManager"
+@onready var choose_player_manager = $"../ChoosePlayerManager"
+
 @onready var deck = $"../Deck/Area2D"
 @onready var deck_button = $"../Deck"
 @onready var discard_button =  $"../CardCanvasLayer/UICard/DiscardButton"
@@ -19,6 +20,8 @@ const BACK_CARD=preload("res://Assets/Red-Cover.png")
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2", 
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3", 
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"]
+	
+@onready var CPCanvas = $"../CPCanvasLayer"
 
 var game_ref = null
 var drawn_card_start_position: Vector2
@@ -36,6 +39,7 @@ func _ready():
 	discard_button.visible = false
 	swap_button.visible = false
 	power_button.visible = false
+	CPCanvas.visible = false
 
 	if deck:
 		deck.deck_clicked.connect(_on_deck_pressed)
@@ -101,7 +105,9 @@ func _on_power_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	
+
+	print("1. power pressed")
+	choose_player_manager.open_modal()
 	game_ref.apply_command({"type":"play_power_card"})
 
 func _on_take_discard_card_pressed():
