@@ -1,11 +1,14 @@
 extends Node
+class_name CommandRouter
 
+var game_manager: GameManager
+var room_id: String = ""
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func setup(gm: GameManager, multiplayer_room_id: String = "") -> void:
+	game_manager = gm
+	room_id = multiplayer_room_id
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func execute(command: Dictionary) -> Dictionary:
+	if room_id != "":
+		return MPManager.send_network_command(room_id, command)
+	return game_manager.apply_command(command)
