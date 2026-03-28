@@ -13,10 +13,6 @@ func _ready() -> void:
 	game_manager.name = "GameManager"
 	add_child(game_manager)
 
-	input_manager.set_game_ref(game_manager)
-	input_manager.set_slot_manager(slot_manager)
-	slot_manager.set_game_ref(game_manager)
-
 	MPManager.command_applied.connect(_on_command_applied)
 	MPManager.command_rejected.connect(_on_command_rejected)
 	MPManager.game_finished.connect(_on_game_finished)
@@ -27,6 +23,9 @@ func _ready() -> void:
 		_setup_local_game()
 
 	game_loaded = true
+	input_manager.set_game_ref(game_manager)
+	input_manager.set_slot_manager(slot_manager)
+	slot_manager.set_game_ref(game_manager)
 
 
 func _exit_tree() -> void:

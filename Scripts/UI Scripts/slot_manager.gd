@@ -3,6 +3,8 @@ class_name SlotManager
 
 const BACK_CARD = preload("res://Assets/Red-Cover.png")
 
+
+
 @onready var hand_slots := [
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot",
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2",

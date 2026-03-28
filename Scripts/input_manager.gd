@@ -4,6 +4,7 @@ class_name InputManager
 const BACK_CARD=preload("res://Assets/Red-Cover.png")
 
 @onready var tween_manager = $"../TweenManager"
+@onready var mp_manaager = $"../Multiplayer/multiplayer_manager.gd"
 
 @onready var slot_manager = $"../SlotManager"
 @onready var deck = $"../Deck/Area2D"
