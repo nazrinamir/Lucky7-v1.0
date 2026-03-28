@@ -10,6 +10,9 @@
 [ext_resource type="Script" uid="uid://o1a1xft4uljk" path="res://Scripts/input_manager.gd" id="8_v158k"]
 [ext_resource type="Script" uid="uid://djgsar5bqw1u7" path="res://Scripts/UI Scripts/slot_manager.gd" id="9_h4fw4"]
 [ext_resource type="Script" uid="uid://c6takl841wlt2" path="res://Scripts/UI Scripts/tween_manager.gd" id="10_ldgsr"]
+[ext_resource type="PackedScene" uid="uid://cil2208dm35fj" path="res://Scenes/UI/ui_choose_player.tscn" id="11_o5yvi"]
+[ext_resource type="Script" uid="uid://ddjj2s5q1oh8k" path="res://Scenes/UI/ui_choose_player.gd" id="12_rfjv2"]
+[ext_resource type="Script" uid="uid://dbmoxc6krylue" path="res://Scripts/choose_player_manager.gd" id="12_rku1e"]
 
 [node name="Game" type="Node2D" unique_id=1830425454]
 script = ExtResource("1_wrm1d")
@@ -101,12 +104,6 @@ offset_top = 420.0
 offset_right = 624.0
 offset_bottom = 451.0
 text = "Open Modal"
-
-[node name="UIChoosePlayer" type="Control" parent="CanvasLayer" unique_id=689285707]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="InputManager" type="Node2D" parent="." unique_id=353262635]
 script = ExtResource("8_v158k")
@@ -224,6 +221,23 @@ script = ExtResource("9_h4fw4")
 
 [node name="TweenManager" type="Node2D" parent="." unique_id=1320143771]
 script = ExtResource("10_ldgsr")
+
+[node name="CPCanvasLayer" type="CanvasLayer" parent="." unique_id=1438521415]
+
+[node name="UIChoosePlayer" parent="CPCanvasLayer" unique_id=1423122256 instance=ExtResource("11_o5yvi")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -2.0
+offset_right = 0.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_rfjv2")
+
+[node name="ChoosePlayerManager" type="Node2D" parent="." unique_id=104218542]
+script = ExtResource("12_rku1e")
 
 [connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
 [connection signal="pressed" from="CardCanvasLayer/UICard/DiscardButton" to="." method="_on_discard_button_pressed"]
