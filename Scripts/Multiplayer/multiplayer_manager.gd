@@ -121,15 +121,16 @@ func host_start_game(room_id: String) -> Dictionary:
 	room["status"] = "starting"
 	room_manager.rooms[room_id] = room
 
-	emit_signal("game_started", room)
-	rpc("rpc_sync_room_state", room_id, room)
-	rpc("rpc_open_game_scene", room_id)
+	emit_signal("game_started", room) # host opens locally
+	rpc("rpc_sync_room_state", room_id, room) # send seed/status only
 
 	return {
 		"ok": true,
 		"room": room
 	}
 
+func open_room_for_clients(room_id: String) -> void:
+	rpc("rpc_open_game_scene", room_id)
 
 func register_host_game(room_id: String, game_scene: Node) -> void:
 	if room_id == "":

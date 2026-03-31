@@ -10,9 +10,20 @@ extends Control
 @onready var port_input: LineEdit = $CenterContainer/VBoxContainer/PortInput
 
 var current_room_id: String = ""
+var lobby_manager: LobbyManager
+var heartbeat_timer: Timer
 
 func _ready():
 	printerr("MAIN_MENU _ready reached")
+
+	lobby_manager = LobbyManager.new()
+	add_child(lobby_manager)
+
+	heartbeat_timer = Timer.new()
+	heartbeat_timer.wait_time = 10.0
+	heartbeat_timer.one_shot = false
+	heartbeat_timer.timeout.connect(_on_heartbeat_timeout)
+	add_child(heartbeat_timer)
 
 	play_button.pressed.connect(_on_play_pressed)
 	host_button.pressed.connect(_on_host_pressed)
@@ -34,51 +45,45 @@ func _ready():
 	MPManager.peer_connected.connect(_on_peer_connected)
 	MPManager.peer_disconnected.connect(_on_peer_disconnected)
 
-	var args := OS.get_cmdline_args()
-	var is_server := OS.has_feature("server") or "--server" in args
 
-	printerr("args = ", args)
-	printerr("OS.has_feature('server') = ", OS.has_feature("server"))
-	printerr("final is_server = ", is_server)
-
-	if is_server:
-		printerr("SERVER MODE DETECTED")
-		_on_host_pressed()
-		await get_tree().process_frame
-		_on_start_button_pressed()
-		
-			
 func _on_play_pressed():
 	get_tree().change_scene_to_file("res://Scenes/game.tscn")
 
 
 func _on_host_pressed():
-	printerr("_on_host_pressed called")
 	var port := get_port_value()
 
 	var host_result = MPManager.host_game(port)
-	printerr("host_result = ", host_result)
-
 	if not host_result["ok"]:
 		printerr(host_result["error"])
 		return
 
-	printerr("Hosting on port: ", port)
-
-	var create_result = MPManager.create_room(4)
-	printerr("create_result = ", create_result)
-
-	if not create_result["ok"]:
-		printerr(create_result["error"])
+	var room_result = MPManager.create_room(4)
+	if not room_result["ok"]:
+		printerr(room_result["error"])
 		return
 
-	current_room_id = create_result["room"]["room_id"]
-	printerr("Waiting for players before starting game")
-	
-	
-func _on_start_button_pressed():
-	printerr("_on_start_button_pressed called, current_room_id = ", current_room_id)
+	current_room_id = room_result["room"]["room_id"]
 
+	var register_result = await lobby_manager.register_room({
+		"room_id": current_room_id,
+		"host_player_id": MPManager.local_player_id,
+		"host_player_name": MPManager.local_player_name,
+		"host_port": port,
+		"max_players": 4,
+		"player_count": 1,
+		"status": "waiting"
+	})
+
+	if not register_result["ok"]:
+		printerr(register_result["error"])
+		return
+
+	address_input.text = current_room_id
+	heartbeat_timer.start()
+	printerr("Room registered in lobby:", current_room_id)
+
+func _on_start_button_pressed():
 	if current_room_id == "":
 		printerr("No room to start")
 		return
@@ -88,20 +93,44 @@ func _on_start_button_pressed():
 
 	if not result["ok"]:
 		printerr(result["error"])
-	
+
+
 func _on_join_pressed():
-	var address := address_input.text.strip_edges()
-	if address == "":
-		address = "127.0.0.1"
-
-	var port := get_port_value()
-
-	var join_result = MPManager.join_game(address, port)
-	if not join_result["ok"]:
-		print(join_result["error"])
+	var room_id := address_input.text.strip_edges()
+	if room_id == "":
+		printerr("Room ID is empty")
 		return
 
-	print("Joining:", address, "port:", port)
+	var lookup_result = await lobby_manager.get_room(room_id)
+	if not lookup_result["ok"]:
+		printerr(lookup_result["error"])
+		return
+
+	var room_data = lookup_result["data"]
+	var host_ip = room_data.get("host_ip", "")
+	# TEMP TEST
+	host_ip = "192.168.1.129"
+	var host_port = int(room_data.get("host_port", 7777))
+
+	if host_ip == "":
+		printerr("Room has no host IP")
+		return
+
+	var join_result = MPManager.join_game(host_ip, host_port)
+	if not join_result["ok"]:
+		printerr(join_result["error"])
+		return
+
+	print("Joining via lobby:", host_ip, "port:", host_port)
+
+
+func _on_heartbeat_timeout():
+	if current_room_id == "":
+		return
+
+	await lobby_manager.send_heartbeat(current_room_id, {
+		"status": "waiting"
+	})
 
 
 func _on_settings_pressed():
@@ -109,6 +138,9 @@ func _on_settings_pressed():
 
 
 func _on_quit_pressed():
+	if current_room_id != "":
+		await lobby_manager.remove_room(current_room_id)
+
 	get_tree().quit()
 
 

@@ -1,29 +1,31 @@
 extends Node
 class_name InputManager
 
-const BACK_CARD=preload("res://Assets/Red-Cover.png")
+const BACK_CARD = preload("res://Assets/Red-Cover.png")
 
 @onready var tween_manager = $"../TweenManager"
-@onready var mp_manaager = $"../Multiplayer/multiplayer_manager.gd"
 @onready var slot_manager = $"../SlotManager"
 @onready var choose_player_manager = $"../ChoosePlayerManager"
 
 @onready var deck = $"../Deck/Area2D"
 @onready var deck_button = $"../Deck"
-@onready var discard_button =  $"../CardCanvasLayer/UICard/DiscardButton"
-@onready var discard_card_button =  $"../CardCanvasLayer/UICard/DiscardCard"
+@onready var discard_button = $"../CardCanvasLayer/UICard/DiscardButton"
+@onready var discard_card_button = $"../CardCanvasLayer/UICard/DiscardCard"
 @onready var swap_button = $"../CardCanvasLayer/UICard/SwapButton"
 @onready var power_button = $"../CardCanvasLayer/UICard/PowerButton"
 @onready var drawn_card_display = $"../CardCanvasLayer/UICard/DrawnCard"
 @onready var discard_card_display = $"../CardCanvasLayer/UICard/DiscardCard"
-@onready var hand_slots := [$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot", 
-	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2", 
-	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3", 
-	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"]
-	
+@onready var hand_slots := [
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"
+]
+
 @onready var CPCanvas = $"../CPCanvasLayer"
 
-var game_ref = null
+var game_ref: GameManager = null
+var command_router: CommandRouter = null
 var drawn_card_start_position: Vector2
 
 func set_slot_manager(value):
@@ -31,8 +33,17 @@ func set_slot_manager(value):
 
 func set_game_ref(value) -> void:
 	game_ref = value
-	#print("game_ref assigned =", game_ref)
-	
+
+func set_command_router(value: CommandRouter) -> void:
+	command_router = value
+
+func _execute(command: Dictionary) -> Dictionary:
+	if command_router == null:
+		print("command_router is null")
+		return {"ok": false, "error": "Command router missing"}
+
+	return command_router.execute(command)
+
 func _ready():
 	#print("game_ref =", game_ref)
 	drawn_card_start_position = drawn_card_display.position
@@ -69,7 +80,12 @@ func _on_deck_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	game_ref.apply_command({"type":"draw_card"})
+
+	var result = _execute({"type": "draw_card"})
+	if not result.get("ok", false):
+		print(result.get("error", "Draw failed"))
+		return
+
 	drawn_card_display.position = drawn_card_start_position
 	tween_manager.slide_card_down(drawn_card_display)
 	update_drawn_card_ui()
@@ -78,7 +94,12 @@ func _on_discard_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	game_ref.apply_command({"type":"discard_card"})
+
+	var result = _execute({"type": "discard_card"})
+	if not result.get("ok", false):
+		print(result.get("error", "Discard failed"))
+		return
+
 	update_drawn_card_ui()
 	update_discard_card_ui()
 	get_discard_pile()
@@ -106,16 +127,22 @@ func _on_power_pressed():
 		print("game_ref is null")
 		return
 
-	print("1. power pressed")
 	choose_player_manager.open_modal()
-	game_ref.apply_command({"type":"play_power_card"})
+
+	var result = _execute({"type": "play_power_card"})
+	if not result.get("ok", false):
+		print(result.get("error", "Power failed"))
 
 func _on_take_discard_card_pressed():
 	if game_ref == null:
 		print("game_ref is null")
 		return
-	
-	game_ref.apply_command({"type":"take_discard"})
+
+	var result = _execute({"type": "take_discard"})
+	if not result.get("ok", false):
+		print(result.get("error", "Take discard failed"))
+		return
+
 	drawn_card_display.position = drawn_card_start_position
 	tween_manager.slide_card_down(drawn_card_display)
 	refresh_ui()
@@ -130,18 +157,15 @@ func update_drawn_card_ui():
 		return
 
 	var card = game_ref.current_drawn_card
-	print(card)
 	if card.is_empty():
 		drawn_card_display.texture = null
 		discard_button.visible = false
 		swap_button.visible = false
 		power_button.visible = false
 		return
-	
-	if card.value == -1:
-		power_button.visible = true
-	
-	drawn_card_display.texture = card["texture"]
+
+	power_button.visible = int(card.get("value", 0)) == -1
+	drawn_card_display.texture = _resolve_texture(card.get("texture", null))
 	discard_button.visible = true
 	swap_button.visible = true
 
@@ -160,9 +184,8 @@ func update_discard_card_ui():
 		discard_card_display.texture_normal = null
 		return
 
-	discard_card_display.texture_normal = top_card_discard["card"]["texture"]
-	
-	print(discard_card_display.texture_normal)
+	var card_data = top_card_discard.get("card", {})
+	discard_card_display.texture_normal = _resolve_texture(card_data.get("texture", null))
 
 func update_player_hand_ui():
 	if game_ref == null:
@@ -190,6 +213,20 @@ func get_discard_pile():
 		print("No discard card")
 	else:
 		print("Top discard asdasd:", top_card_discard)
+	
+func _resolve_texture(value) -> Texture2D:
+	if value == null:
+		return null
+
+	if value is Texture2D:
+		return value
+
+	if value is String and value != "":
+		var tex = load(value)
+		if tex is Texture2D:
+			return tex
+
+	return null
 	
 func refresh_ui():
 	update_player_hand_ui()

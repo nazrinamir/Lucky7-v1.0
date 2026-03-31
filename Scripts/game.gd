@@ -12,42 +12,39 @@ extends Node2D
 var room_id: String = ""
 var game_loaded := false
 var waiting_for_snapshot := false
+var command_router := CommandRouter.new()
 
 
 func _ready() -> void:
 	game_manager.name = "GameManager"
 	add_child(game_manager)
 
+	add_child(command_router)
+	command_router.setup(game_manager, room_id)
+
+	set_game_ref_to_child()
+
 	MPManager.command_applied.connect(_on_command_applied)
 	MPManager.command_rejected.connect(_on_command_rejected)
 	MPManager.game_finished.connect(_on_game_finished)
+	MPManager.room_updated.connect(_on_room_updated)
 
-	# 👇 ADD THIS BLOCK
-	if OS.has_feature("server"):
-		print("Starting dedicated server...")
-		var result = MPManager.host_game(7777)
-		print(result)
-
-		# create a default room for server
-		var room = MPManager.create_room()
-		room_id = room.get("room", {}).get("room_id", "")
-		print("Server room created:", room_id)
-
+	if room_id != "":
 		_setup_multiplayer_game()
 	else:
-		if room_id != "":
-			_setup_multiplayer_game()
-		else:
-			_setup_local_game()
+		_setup_local_game()
 
 	game_loaded = true
-	set_game_ref_to_child()
 	game_manager.turn_changed.connect(ui_turn_panel._on_turn_changed)
-	
-	
+
+	if waiting_for_snapshot:
+		call_deferred("_retry_waiting_client_setup")
+		
 func set_game_ref_to_child():
 	input_manager.set_game_ref(game_manager)
 	input_manager.set_slot_manager(slot_manager)
+	input_manager.set_command_router(command_router)
+
 	slot_manager.set_game_ref(game_manager)
 	ui_turn_panel.set_game_ref(game_manager)
 
@@ -116,6 +113,7 @@ func _setup_host_room_game(players: Array, seed: int) -> void:
 
 	var new_snapshot = game_manager.get_game_snapshot()
 	MPManager.set_room_snapshot(room_id, new_snapshot)
+	MPManager.open_room_for_clients(room_id)
 
 	waiting_for_snapshot = false
 	_refresh_view()
@@ -138,7 +136,44 @@ func _setup_client_room_game(snapshot: Dictionary, seed: int) -> void:
 	_refresh_view()
 	print("Imported initial room snapshot")
 
+func _on_room_updated(room_data: Dictionary) -> void:
+	if room_data.get("room_id", "") != room_id:
+		return
 
+	print("room_updated received for room:", room_id)
+
+	if not waiting_for_snapshot:
+		print("Not waiting for snapshot, ignoring room_updated")
+		return
+
+	var snapshot: Dictionary = room_data.get("game_snapshot", {})
+	var seed := int(room_data.get("game_seed", -1))
+
+	if snapshot.is_empty():
+		print("room_updated received but snapshot still empty")
+		return
+
+	print("Snapshot arrived later, completing client setup...")
+	_setup_client_room_game(snapshot, seed)
+
+func _retry_waiting_client_setup() -> void:
+	if not waiting_for_snapshot:
+		return
+
+	if room_id == "":
+		return
+
+	var room_data = MPManager.get_room(room_id)
+	var snapshot: Dictionary = room_data.get("game_snapshot", {})
+	var seed := int(room_data.get("game_seed", -1))
+
+	if snapshot.is_empty():
+		print("Retry check: snapshot still empty")
+		return
+
+	print("Retry check: snapshot found, completing setup...")
+	_setup_client_room_game(snapshot, seed)
+	
 func _input(event) -> void:
 	if not game_loaded:
 		return
@@ -243,5 +278,8 @@ func _on_game_finished(room_data: Dictionary) -> void:
 
 
 func _refresh_view() -> void:
-	# update your UI here
-	pass
+	if input_manager:
+		input_manager.refresh_ui()
+
+	if ui_turn_panel and game_manager:
+		ui_turn_panel._on_turn_changed(game_manager.current_player_index)
