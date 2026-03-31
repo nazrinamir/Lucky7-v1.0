@@ -22,15 +22,29 @@ func _ready() -> void:
 	MPManager.command_rejected.connect(_on_command_rejected)
 	MPManager.game_finished.connect(_on_game_finished)
 
-	if room_id != "":
+	# 👇 ADD THIS BLOCK
+	if OS.has_feature("server"):
+		print("Starting dedicated server...")
+		var result = MPManager.host_game(7777)
+		print(result)
+
+		# create a default room for server
+		var room = MPManager.create_room()
+		room_id = room.get("room", {}).get("room_id", "")
+		print("Server room created:", room_id)
+
 		_setup_multiplayer_game()
 	else:
-		_setup_local_game()
+		if room_id != "":
+			_setup_multiplayer_game()
+		else:
+			_setup_local_game()
 
 	game_loaded = true
 	set_game_ref_to_child()
 	game_manager.turn_changed.connect(ui_turn_panel._on_turn_changed)
-
+	
+	
 func set_game_ref_to_child():
 	input_manager.set_game_ref(game_manager)
 	input_manager.set_slot_manager(slot_manager)

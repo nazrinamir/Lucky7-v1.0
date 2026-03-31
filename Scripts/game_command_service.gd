@@ -1,7 +1,7 @@
 extends Node
 class_name CommandRouter
 
-var game_manager: GameManager
+var game_manager: GameManager	
 var room_id: String = ""
 
 func setup(gm: GameManager, multiplayer_room_id: String = "") -> void:

@@ -12,6 +12,8 @@ extends Control
 var current_room_id: String = ""
 
 func _ready():
+	printerr("MAIN_MENU _ready reached")
+
 	play_button.pressed.connect(_on_play_pressed)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
@@ -32,44 +34,61 @@ func _ready():
 	MPManager.peer_connected.connect(_on_peer_connected)
 	MPManager.peer_disconnected.connect(_on_peer_disconnected)
 
+	var args := OS.get_cmdline_args()
+	var is_server := OS.has_feature("server") or "--server" in args
 
+	printerr("args = ", args)
+	printerr("OS.has_feature('server') = ", OS.has_feature("server"))
+	printerr("final is_server = ", is_server)
+
+	if is_server:
+		printerr("SERVER MODE DETECTED")
+		_on_host_pressed()
+		await get_tree().process_frame
+		_on_start_button_pressed()
+		
+			
 func _on_play_pressed():
 	get_tree().change_scene_to_file("res://Scenes/game.tscn")
 
 
 func _on_host_pressed():
+	printerr("_on_host_pressed called")
 	var port := get_port_value()
 
 	var host_result = MPManager.host_game(port)
-	print("host_result =", host_result)
+	printerr("host_result = ", host_result)
 
 	if not host_result["ok"]:
-		print(host_result["error"])
+		printerr(host_result["error"])
 		return
 
-	print("Hosting on port:", port)
+	printerr("Hosting on port: ", port)
 
 	var create_result = MPManager.create_room(4)
-	print("create_result =", create_result)
+	printerr("create_result = ", create_result)
 
 	if not create_result["ok"]:
-		print(create_result["error"])
+		printerr(create_result["error"])
 		return
 
 	current_room_id = create_result["room"]["room_id"]
-	print("Waiting for players before starting game")
-
-
+	printerr("Waiting for players before starting game")
+	
+	
 func _on_start_button_pressed():
+	printerr("_on_start_button_pressed called, current_room_id = ", current_room_id)
+
 	if current_room_id == "":
-		print("No room to start")
+		printerr("No room to start")
 		return
 
 	var result = MPManager.host_start_game(current_room_id)
+	printerr("start_result = ", result)
+
 	if not result["ok"]:
-		print(result["error"])
-
-
+		printerr(result["error"])
+	
 func _on_join_pressed():
 	var address := address_input.text.strip_edges()
 	if address == "":
