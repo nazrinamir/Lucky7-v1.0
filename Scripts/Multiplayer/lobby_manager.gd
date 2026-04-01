@@ -15,7 +15,7 @@ const JSON_HEADERS := [
 	"Content-Type: application/json"
 ]
 
-@export var base_url: String = "http://34.173.203.6:3000"
+@export var base_url: String = "http://136.115.54.229:3000"
 @export var request_timeout := 10.0
 
 var _http: HTTPRequest

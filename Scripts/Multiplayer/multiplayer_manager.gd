@@ -16,7 +16,7 @@ signal connected_to_server
 signal connection_failed
 signal server_disconnected
 
-var peer := ENetMultiplayerPeer.new()
+var peer: ENetMultiplayerPeer = null
 var is_host: bool = false
 var room_manager := RoomManager.new()
 var active_room_id: String = ""
@@ -36,6 +36,14 @@ func set_local_player(player_id: String, player_name: String) -> void:
 
 
 func host_game(port: int = 7777, max_clients: int = 4) -> Dictionary:
+	# 🔥 CLEANUP FIRST
+	if multiplayer.multiplayer_peer != null:
+		multiplayer.multiplayer_peer.close()
+		multiplayer.multiplayer_peer = null
+
+	# 🔥 CREATE NEW PEER
+	peer = ENetMultiplayerPeer.new()
+
 	var err = peer.create_server(port, max_clients)
 	if err != OK:
 		return fail("Failed to host game on port %d" % port)
@@ -51,6 +59,12 @@ func host_game(port: int = 7777, max_clients: int = 4) -> Dictionary:
 
 
 func join_game(ip: String, port: int = 7777) -> Dictionary:
+	if multiplayer.multiplayer_peer != null:
+		multiplayer.multiplayer_peer.close()
+		multiplayer.multiplayer_peer = null
+
+	peer = ENetMultiplayerPeer.new()
+
 	var err = peer.create_client(ip, port)
 	if err != OK:
 		return fail("Failed to join %s:%d" % [ip, port])
