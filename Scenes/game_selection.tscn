@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cnho5u2dgn6ne"]
+
+[ext_resource type="Script" uid="uid://fylufahf6fid" path="res://Scenes/game_selection.gd" id="1_bysyl"]
+[ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_yvivq"]
+[ext_resource type="Texture2D" uid="uid://bworx6kfsjtyk" path="res://Assets/Buttons/singleplayer button.png" id="2_ov8iy"]
+[ext_resource type="Texture2D" uid="uid://1gm2rb7s8rvs" path="res://Assets/Buttons/singleplayer button_hover.png" id="3_bysyl"]
+[ext_resource type="Texture2D" uid="uid://ddcdl6pdsr4qw" path="res://Assets/Buttons/multiplayer button.png" id="4_qk8bi"]
+[ext_resource type="Texture2D" uid="uid://de755mv8mbxb0" path="res://Assets/Buttons/multiplayer button_hover.png" id="5_ktr47"]
+
+[node name="GameSelection" type="Control" unique_id=1372922631]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bysyl")
+
+[node name="Background" parent="." unique_id=816431299 instance=ExtResource("1_yvivq")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=142193068]
+layout_mode = 0
+offset_left = 330.0
+offset_top = 280.0
+offset_right = 810.0
+offset_bottom = 325.0
+theme_override_constants/separation = 200
+
+[node name="SinglePlayerButton" type="TextureButton" parent="HBoxContainer" unique_id=1636317219]
+custom_minimum_size = Vector2(140, 45)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource("2_ov8iy")
+texture_pressed = ExtResource("2_ov8iy")
+texture_hover = ExtResource("3_bysyl")
+texture_disabled = ExtResource("3_bysyl")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="MultiplayerButton" type="TextureButton" parent="HBoxContainer" unique_id=1387384696]
+custom_minimum_size = Vector2(140, 45)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource("4_qk8bi")
+texture_pressed = ExtResource("4_qk8bi")
+texture_hover = ExtResource("5_ktr47")
+texture_disabled = ExtResource("5_ktr47")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BackButton" type="Button" parent="." unique_id=323807222]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 62.0
+offset_right = 100.0
+offset_bottom = 98.0
+theme_override_font_sizes/font_size = 20
+text = "Back"

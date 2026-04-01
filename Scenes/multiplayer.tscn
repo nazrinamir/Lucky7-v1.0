@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://c34plum3rote6"]
+
+[ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_42yti"]
+[ext_resource type="Script" uid="uid://cm7gnw8q0x7gu" path="res://Scenes/ui_mp.gd" id="1_q0ldm"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_42yti"]
+
+[node name="Multiplayer" type="Control" unique_id=1578086070]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q0ldm")
+
+[node name="Background" parent="." unique_id=1652387584 instance=ExtResource("1_42yti")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=842737334]
+layout_mode = 0
+offset_left = 474.0
+offset_top = 207.0
+offset_right = 705.0
+offset_bottom = 247.0
+theme_override_constants/separation = 50
+
+[node name="HostButton" type="Button" parent="HBoxContainer" unique_id=1639287210]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="HBoxContainer" unique_id=896026594]
+layout_mode = 2
+text = "Join Game"
+
+[node name="StartButton" type="Button" parent="." unique_id=1356141816]
+layout_mode = 0
+offset_left = 481.0
+offset_top = 405.0
+offset_right = 679.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 35
+text = "Start Game"
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=1234196577]
+layout_mode = 0
+offset_left = 344.0
+offset_top = 278.0
+offset_right = 845.0
+offset_bottom = 347.0
+theme_override_font_sizes/font_size = 44
+placeholder_text = "Lobby Code"
+alignment = 1
+max_length = 10
+editable = false
+right_icon = SubResource("ImageTexture_42yti")
+
+[node name="BackButton" type="Button" parent="." unique_id=1434630107]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 78.0
+offset_right = 98.0
+offset_bottom = 114.0
+theme_override_font_sizes/font_size = 20
+text = "back"
