@@ -10,6 +10,7 @@ size = Vector2(82, 108)
 font_color = Color(0, 0, 0, 1)
 
 [node name="Deck" type="TextureButton" unique_id=128374212]
+tooltip_text = "Deck- Why you put your filthy mouse on me. Of course, it is for drawing card"
 
 [node name="DeckImage" type="Sprite2D" parent="." unique_id=38779640]
 scale = Vector2(0.7089947, 0.70899475)
