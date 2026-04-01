@@ -9,7 +9,7 @@ size = Vector2(68, 92)
 
 [node name="CardSlotImage" type="Sprite2D" parent="." unique_id=2130312830]
 position = Vector2(34.025, 46.250004)
-scale = Vector2(0.37749997, 0.34528297)
+scale = Vector2(0.79011613, 0.66071427)
 texture = ExtResource("1_p5dbl")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1431396920]

@@ -186,6 +186,9 @@ func update_discard_card_ui():
 
 	var card_data = top_card_discard.get("card", {})
 	discard_card_display.texture_normal = _resolve_texture(card_data.get("texture", null))
+	#discard_card_display.custom_minimum_size = Vector2(515, 282)
+	discard_card_display.ignore_texture_size = true
+	discard_card_display.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
 func update_player_hand_ui():
 	if game_ref == null:

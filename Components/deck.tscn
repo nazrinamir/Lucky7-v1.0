@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://cmiw60sjohcoi"]
 
-[ext_resource type="Script" path="res://Components/deck.gd" id="1_0r3cw"]
-[ext_resource type="Texture2D" uid="uid://csk5y2dxyjhlx" path="res://Assets/Red-Cover.png" id="1_0tl26"]
+[ext_resource type="Script" uid="uid://cy4dug6rarqnt" path="res://Components/deck.gd" id="1_0r3cw"]
+[ext_resource type="Texture2D" uid="uid://bbx6n3e3e3jma" path="res://Assets/Deck/deck.png" id="1_acy8r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0r3cw"]
-size = Vector2(65, 88)
+size = Vector2(82, 108)
 
 [sub_resource type="LabelSettings" id="LabelSettings_0tl26"]
 font_color = Color(0, 0, 0, 1)
@@ -12,24 +12,18 @@ font_color = Color(0, 0, 0, 1)
 [node name="Deck" type="TextureButton" unique_id=128374212]
 
 [node name="DeckImage" type="Sprite2D" parent="." unique_id=38779640]
-texture = ExtResource("1_0tl26")
-
-[node name="DeckImage2" type="Sprite2D" parent="." unique_id=1030828679]
-position = Vector2(-2, -2)
-texture = ExtResource("1_0tl26")
-
-[node name="DeckImage3" type="Sprite2D" parent="." unique_id=1254869787]
-position = Vector2(-5, -5)
-texture = ExtResource("1_0tl26")
+scale = Vector2(0.7089947, 0.70899475)
+texture = ExtResource("1_acy8r")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=207453043]
 script = ExtResource("1_0r3cw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1376734114]
-position = Vector2(-2.5, -1)
+position = Vector2(-1, -1)
 shape = SubResource("RectangleShape2D_0r3cw")
 
 [node name="Label" type="Label" parent="." unique_id=966590283]
+visible = false
 layout_mode = 0
 offset_left = -24.0
 offset_top = -14.0
