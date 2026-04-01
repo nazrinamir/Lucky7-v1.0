@@ -12,6 +12,9 @@ func _ready() -> void:
 	back_button.pressed.connect(_on_back_pressed)
 	
 
+func _on_copy_pressed():
+	pass
+
 func _on_host_pressed():
 	pass
 

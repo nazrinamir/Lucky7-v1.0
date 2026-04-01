@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b1roepuyohuhp"]
 
+[ext_resource type="Script" uid="uid://swrawun4bpi2" path="res://Scenes/setting.gd" id="1_47wfv"]
 [ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_h44gi"]
 
 [node name="Setting" type="Control" unique_id=1415517919]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_47wfv")
 
 [node name="Background" parent="." unique_id=58218637 instance=ExtResource("1_h44gi")]
 layout_mode = 1
@@ -24,9 +26,9 @@ grow_vertical = 2
 
 [node name="BackButton" type="Button" parent="." unique_id=356826105]
 layout_mode = 0
-offset_left = 72.0
-offset_top = 95.0
-offset_right = 127.0
-offset_bottom = 131.0
+offset_left = 65.0
+offset_top = 67.0
+offset_right = 120.0
+offset_bottom = 103.0
 theme_override_font_sizes/font_size = 20
 text = "Back"

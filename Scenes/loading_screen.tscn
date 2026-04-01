@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://d7444gksga78"]
+
+[ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_oobaa"]
+
+[node name="LoadingScreen" type="Control" unique_id=1786842052]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" parent="." unique_id=576101339 instance=ExtResource("1_oobaa")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=955236892]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 593.0
+offset_right = 1138.0
+offset_bottom = 636.0
+theme_override_font_sizes/font_size = 25
+text = "Loading..."
+editable = false
