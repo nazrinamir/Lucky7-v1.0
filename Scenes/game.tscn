@@ -33,7 +33,7 @@ font_size = 39
 outline_size = 7
 outline_color = Color(0, 0, 0, 1)
 
-[node name="Game" type="Node2D" unique_id=1830425454]
+[node name="Game" type="Node2D" unique_id=1430688704]
 script = ExtResource("1_wrm1d")
 
 [node name="BackgroundColor" type="ColorRect" parent="." unique_id=1237817748]
@@ -81,6 +81,7 @@ ignore_texture_size = true
 stretch_mode = 4
 
 [node name="Panel" type="Panel" parent="CardCanvasLayer/UICard" unique_id=1664996882]
+self_modulate = Color(0, 0, 0, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 17.803001
@@ -323,7 +324,3 @@ script = ExtResource("10_ldgsr")
 
 [node name="ChoosePlayerManager" type="Node2D" parent="." unique_id=104218542]
 script = ExtResource("12_rku1e")
-
-[connection signal="pressed" from="Deck" to="." method="_on_deck_pressed"]
-[connection signal="pressed" from="CardCanvasLayer/UICard/Panel/VBoxContainer/DiscardButton" to="." method="_on_discard_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/UI/Button" to="." method="_on_button_pressed"]
