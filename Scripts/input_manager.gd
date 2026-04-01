@@ -8,12 +8,13 @@ const BACK_CARD = preload("res://Assets/Red-Cover.png")
 @onready var choose_player_manager = $"../ChoosePlayerManager"
 
 @onready var deck = $"../Deck/Area2D"
+@onready var drawn_card_panel = $"../CardCanvasLayer/UICard/Panel"
 @onready var deck_button = $"../Deck"
-@onready var discard_button = $"../CardCanvasLayer/UICard/DiscardButton"
+@onready var discard_button = $"../CardCanvasLayer/UICard/Panel/VBoxContainer/DiscardButton"
 @onready var discard_card_button = $"../CardCanvasLayer/UICard/DiscardCard"
-@onready var swap_button = $"../CardCanvasLayer/UICard/SwapButton"
-@onready var power_button = $"../CardCanvasLayer/UICard/PowerButton"
-@onready var drawn_card_display = $"../CardCanvasLayer/UICard/DrawnCard"
+@onready var swap_button = $"../CardCanvasLayer/UICard/Panel/VBoxContainer/SwapButton"
+@onready var power_button = $"../CardCanvasLayer/UICard/Panel/VBoxContainer/PowerButton"
+@onready var drawn_card_display = $"../CardCanvasLayer/UICard/Panel/DrawnCard"
 @onready var discard_card_display = $"../CardCanvasLayer/UICard/DiscardCard"
 @onready var hand_slots := [
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot",
@@ -46,6 +47,7 @@ func _execute(command: Dictionary) -> Dictionary:
 
 func _ready():
 	#print("game_ref =", game_ref)
+	drawn_card_panel.visible = false
 	drawn_card_start_position = drawn_card_display.position
 	discard_button.visible = false
 	swap_button.visible = false
@@ -71,8 +73,9 @@ func _ready():
 	for i in range(hand_slots.size()):
 		hand_slots[i].pressed.connect(func(): _on_slot_pressed(i))
 	
+	slot_manager.update_hand_ui()
 	update_discard_card_ui()
-	update_player_hand_ui()
+	#update_player_hand_ui()
 	
 
 
@@ -159,11 +162,13 @@ func update_drawn_card_ui():
 	var card = game_ref.current_drawn_card
 	if card.is_empty():
 		drawn_card_display.texture = null
+		drawn_card_panel.visible = false
 		discard_button.visible = false
 		swap_button.visible = false
 		power_button.visible = false
 		return
-
+	
+	drawn_card_panel.visible = true
 	power_button.visible = int(card.get("value", 0)) == -1
 	drawn_card_display.texture = _resolve_texture(card.get("texture", null))
 	discard_button.visible = true
@@ -190,21 +195,21 @@ func update_discard_card_ui():
 	discard_card_display.ignore_texture_size = true
 	discard_card_display.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 
-func update_player_hand_ui():
-	if game_ref == null:
-		print("game_ref is null")
-		return
-		
-	var player_index = game_ref.current_player_index
-	
-	for i in range(hand_slots.size()):
-		var slot_data = game_ref.get_player_slot(player_index, i)
-		if slot_data.is_empty():
-			hand_slots[i].texture_normal = null
-			continue
-		hand_slots[i].texture_normal = BACK_CARD
-		
-	print(hand_slots)
+#func update_player_hand_ui():
+	#if game_ref == null:
+		#print("game_ref is null")
+		#return
+		#
+	#var player_index = game_ref.current_player_index
+	#
+	#for i in range(hand_slots.size()):
+		#var slot_data = game_ref.get_player_slot(player_index, i)
+		#if slot_data.is_empty():
+			#hand_slots[i].texture_normal = null
+			#continue
+		#hand_slots[i].texture_normal = BACK_CARD
+		#
+	#print(hand_slots)
 
 func get_discard_pile():
 	if game_ref == null:
@@ -232,7 +237,8 @@ func _resolve_texture(value) -> Texture2D:
 	return null
 	
 func refresh_ui():
-	update_player_hand_ui()
+	#update_player_hand_ui()
+	slot_manager.update_hand_ui()
 	update_discard_card_ui()
 	update_drawn_card_ui()
 

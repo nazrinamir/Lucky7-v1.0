@@ -12,6 +12,14 @@ position = Vector2(34.025, 46.250004)
 scale = Vector2(0.79011613, 0.66071427)
 texture = ExtResource("1_p5dbl")
 
+[node name="CardImage" type="TextureRect" parent="." unique_id=629467280]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 62.0
+offset_bottom = 88.0
+mouse_filter = 2
+
 [node name="Area2D" type="Area2D" parent="." unique_id=1431396920]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1718302481]

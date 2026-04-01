@@ -12,6 +12,13 @@ const BACK_CARD = preload("res://Assets/Red-Cover.png")
 	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4"
 ]
 
+@onready var hand_slot_images := [
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot/CardImage",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot2/CardImage",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot3/CardImage",
+	$"../PlayerCanvasLayer/UI/CurrentPlayerHand/HBoxContainer/CardSlot4/CardImage"
+]
+
 var game_ref = null
 var is_swap_mode := false
 
@@ -23,6 +30,13 @@ func set_game_ref(value) -> void:
 func _ready() -> void:
 	for i in range(hand_slots.size()):
 		hand_slots[i].pressed.connect(func(): _on_slot_pressed(i))
+		
+		hand_slot_images[i].expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		hand_slot_images[i].stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		hand_slot_images[i].mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hand_slot_images[i].z_index = 1
+	
+	update_hand_ui()
 
 func begin_swap_mode() -> void:
 	is_swap_mode = true
@@ -57,22 +71,18 @@ func update_hand_ui() -> void:
 
 	var player_index = game_ref.current_player_index
 
-	#print("update_hand_ui called")
-	#print("player_index =", player_index)
-	#print("Player hand =", game_ref.get_player_hand(player_index))
-
 	for i in range(hand_slots.size()):
 		var slot_data = game_ref.get_player_slot(player_index, i)
-		#print("slot", i, "=", str(slot_data))
+
 		if slot_data.is_empty():
-			hand_slots[i].texture_normal = null
+			hand_slot_images[i].texture = null
 			hand_slots[i].modulate = Color(1, 1, 1, 1)
 			continue
 
 		if slot_data.get("is_revealed", false):
-			hand_slots[i].texture_normal = load(slot_data["card"]["texture"])
+			hand_slot_images[i].texture = load(slot_data["card"]["texture"])
 		else:
-			hand_slots[i].texture_normal = BACK_CARD
+			hand_slot_images[i].texture = BACK_CARD
 
 		if slot_data.get("is_locked", false):
 			hand_slots[i].modulate = Color(0.7, 0.7, 0.7, 1.0)
