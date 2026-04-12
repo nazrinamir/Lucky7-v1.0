@@ -20,12 +20,16 @@ const BACK_CARD = preload("res://Assets/Red-Cover.png")
 ]
 
 var game_ref = null
+var command_router: CommandRouter = null
 var is_swap_mode := false
 
 func set_game_ref(value) -> void:
 	game_ref = value
 	#print("SlotManager game_ref assigned =", game_ref)
 	update_hand_ui()
+
+func set_command_router(value: CommandRouter) -> void:
+	command_router = value
 
 func _ready() -> void:
 	for i in range(hand_slots.size()):
@@ -56,7 +60,15 @@ func _on_slot_pressed(index: int) -> void:
 	if not is_swap_mode:
 		return
 
-	game_ref.apply_command({"type":"swap_with_hand","slot_index":index})
+	if command_router == null:
+		print("command_router is null")
+		return
+
+	var result = command_router.execute({"type": "swap_with_hand", "slot_index": index})
+	if not result.get("ok", false):
+		print(result.get("error", "Swap failed"))
+		return
+
 	end_swap_mode()
 	update_hand_ui()
 

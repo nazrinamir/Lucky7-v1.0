@@ -46,10 +46,12 @@ func set_game_ref_to_child():
 	input_manager.set_command_router(command_router)
 
 	slot_manager.set_game_ref(game_manager)
+	slot_manager.set_command_router(command_router)
 	ui_turn_panel.set_game_ref(game_manager)
 
 	cp_manager.set_game_ref(game_manager)
 	cp_manager.set_ui_ref(ui_choose_player)
+	cp_manager.set_command_router(command_router)
 
 	ui_choose_player.player_selected.connect(cp_manager.on_player_selected)
 	ui_choose_player.slot_selected.connect(cp_manager.on_slot_selected)
@@ -189,58 +191,61 @@ func _handle_multiplayer_input(event) -> void:
 		return
 
 	if event.is_action_pressed("draw_card"):
-		MPManager.send_network_command(room_id, {"type": "draw_card"})
+		command_router.execute({"type": "draw_card"})
 	elif event.is_action_pressed("take_discard"):
-		MPManager.send_network_command(room_id, {"type": "take_discard"})
+		command_router.execute({"type": "take_discard"})
 	elif event.is_action_pressed("discard_card"):
-		MPManager.send_network_command(room_id, {"type": "discard_card"})
+		command_router.execute({"type": "discard_card"})
 	elif event.is_action_pressed("play_power_card"):
-		MPManager.send_network_command(room_id, {"type": "play_power_card"})
+		command_router.execute({"type": "play_power_card"})
 	elif event.is_action_pressed("swap_slot_0"):
-		MPManager.send_network_command(room_id, {"type": "select_slot", "slot_index": 0})
+		command_router.execute({"type": "select_slot", "slot_index": 0})
 	elif event.is_action_pressed("swap_slot_1"):
-		MPManager.send_network_command(room_id, {"type": "select_slot", "slot_index": 1})
+		command_router.execute({"type": "select_slot", "slot_index": 1})
 	elif event.is_action_pressed("swap_slot_2"):
-		MPManager.send_network_command(room_id, {"type": "select_slot", "slot_index": 2})
+		command_router.execute({"type": "select_slot", "slot_index": 2})
 	elif event.is_action_pressed("swap_slot_3"):
-		MPManager.send_network_command(room_id, {"type": "select_slot", "slot_index": 3})
+		command_router.execute({"type": "select_slot", "slot_index": 3})
 	elif event.is_action_pressed("select_player_0"):
-		MPManager.send_network_command(room_id, {"type": "select_player", "player_index": 0})
+		command_router.execute({"type": "select_player", "player_index": 0})
 	elif event.is_action_pressed("select_player_1"):
-		MPManager.send_network_command(room_id, {"type": "select_player", "player_index": 1})
+		command_router.execute({"type": "select_player", "player_index": 1})
 	elif event.is_action_pressed("select_player_2"):
-		MPManager.send_network_command(room_id, {"type": "select_player", "player_index": 2})
+		command_router.execute({"type": "select_player", "player_index": 2})
 	elif event.is_action_pressed("select_player_3"):
-		MPManager.send_network_command(room_id, {"type": "select_player", "player_index": 3})
+		command_router.execute({"type": "select_player", "player_index": 3})
 
 
 func _handle_local_input(event) -> void:
+	var cmd: Dictionary = {}
 	if event.is_action_pressed("draw_card"):
-		game_manager.draw_from_deck()
+		cmd = {"type": "draw_card"}
 	elif event.is_action_pressed("take_discard"):
-		game_manager.take_discard()
+		cmd = {"type": "take_discard"}
 	elif event.is_action_pressed("discard_card"):
-		game_manager.discard_current_card()
+		cmd = {"type": "discard_card"}
 	elif event.is_action_pressed("play_power_card"):
-		game_manager.play_power_card()
+		cmd = {"type": "play_power_card"}
 	elif event.is_action_pressed("swap_slot_0"):
-		game_manager.handle_slot_input(0)
+		cmd = {"type": "select_slot", "slot_index": 0}
 	elif event.is_action_pressed("swap_slot_1"):
-		game_manager.handle_slot_input(1)
+		cmd = {"type": "select_slot", "slot_index": 1}
 	elif event.is_action_pressed("swap_slot_2"):
-		game_manager.handle_slot_input(2)
+		cmd = {"type": "select_slot", "slot_index": 2}
 	elif event.is_action_pressed("swap_slot_3"):
-		game_manager.handle_slot_input(3)
+		cmd = {"type": "select_slot", "slot_index": 3}
 	elif event.is_action_pressed("select_player_0"):
-		game_manager.handle_player_input(0)
+		cmd = {"type": "select_player", "player_index": 0}
 	elif event.is_action_pressed("select_player_1"):
-		game_manager.handle_player_input(1)
+		cmd = {"type": "select_player", "player_index": 1}
 	elif event.is_action_pressed("select_player_2"):
-		game_manager.handle_player_input(2)
+		cmd = {"type": "select_player", "player_index": 2}
 	elif event.is_action_pressed("select_player_3"):
-		game_manager.handle_player_input(3)
+		cmd = {"type": "select_player", "player_index": 3}
 
-	_refresh_view()
+	if not cmd.is_empty():
+		command_router.execute(cmd)
+		_refresh_view()
 
 
 func _on_command_applied(applied_room_id: String, result: Dictionary, snapshot: Dictionary) -> void:

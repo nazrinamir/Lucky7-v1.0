@@ -3,6 +3,7 @@ class_name ChoosePlayerManager
 
 var game_ref
 var ui_ref
+var command_router: CommandRouter = null
 
 var current_power_rank = ""
 var selected_player_index = -1
@@ -18,6 +19,15 @@ func set_game_ref(value):
 
 func set_ui_ref(value):
 	ui_ref = value
+
+func set_command_router(value: CommandRouter) -> void:
+	command_router = value
+
+func _execute(command: Dictionary) -> Dictionary:
+	if command_router == null:
+		print("command_router is null")
+		return {"ok": false, "error": "Command router missing"}
+	return command_router.execute(command)
 
 func reset_flow():
 	flow_step = ""
@@ -80,50 +90,48 @@ func on_player_selected(player_index: int):
 	match flow_step:
 		"jack_first_player":
 			first_player_index = player_index
-			if first_player_index:
-				game_ref.apply_command({
-				"type": "select_player",
-				"player_index": first_player_index
-				})
+			var r_j1 = _execute({"type": "select_player", "player_index": first_player_index})
+			if not r_j1.get("ok", false):
+				print(r_j1.get("error", "Jack first player failed"))
+				return
 			flow_step = "jack_first_slot"
 			ui_ref.set_instruction("Select First Slot")
 			ui_ref.show_slot_selection()
 
 		"jack_second_player":
 			second_player_index = player_index
-			if second_player_index:
-				game_ref.apply_command({
-					"type": "select_player",
-					"player_index": second_player_index
-				})
+			var r_j2 = _execute({"type": "select_player", "player_index": second_player_index})
+			if not r_j2.get("ok", false):
+				print(r_j2.get("error", "Jack second player failed"))
+				return
 			flow_step = "jack_second_slot"
 			ui_ref.set_instruction("Select Second Slot")
 			ui_ref.show_slot_selection()
 
 		"queen_player":
-			game_ref.apply_command({
-				"type": "select_player",
-				"player_index": player_index
-			})
+			var r_q = _execute({"type": "select_player", "player_index": player_index})
+			if not r_q.get("ok", false):
+				print(r_q.get("error", "Queen selection failed"))
+				return
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
 			update_discard_card()
 
 		"king_player":
 			selected_player_index = player_index
-			game_ref.apply_command({
-				"type": "select_player",
-				"player_index": player_index
-			})
+			var r_kp = _execute({"type": "select_player", "player_index": player_index})
+			if not r_kp.get("ok", false):
+				print(r_kp.get("error", "King player selection failed"))
+				return
 			flow_step = "king_slot"
 			ui_ref.set_instruction("Select Slot To Lock")
 			ui_ref.show_slot_selection()
 
 		"joker_player":
-			game_ref.apply_command({
-				"type": "select_player",
-				"player_index": player_index
-			})
+			var r_jk = _execute({"type": "select_player", "player_index": player_index})
+			if not r_jk.get("ok", false):
+				print(r_jk.get("error", "Joker selection failed"))
+				return
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
 			update_discard_card()
@@ -138,29 +146,29 @@ func on_slot_selected(slot_index: int):
 	match flow_step:
 		"jack_first_slot":
 			first_slot_index = slot_index
-			game_ref.apply_command({
-				"type": "select_slot",
-				"slot_index": first_slot_index
-			})
+			var r_s1 = _execute({"type": "select_slot", "slot_index": first_slot_index})
+			if not r_s1.get("ok", false):
+				print(r_s1.get("error", "Jack first slot failed"))
+				return
 			flow_step = "jack_second_player"
 			ui_ref.set_instruction("Select Second Player")
 			ui_ref.show_player_selection()
 
 		"jack_second_slot":
 			second_slot_index = slot_index
-			game_ref.apply_command({
-				"type": "select_slot",
-				"slot_index": second_slot_index
-			})
+			var r_s2 = _execute({"type": "select_slot", "slot_index": second_slot_index})
+			if not r_s2.get("ok", false):
+				print(r_s2.get("error", "Jack second slot failed"))
+				return
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
 			update_discard_card()
 
 		"king_slot":
-			game_ref.apply_command({
-				"type": "select_slot",
-				"slot_index": slot_index
-			})
+			var r_ks = _execute({"type": "select_slot", "slot_index": slot_index})
+			if not r_ks.get("ok", false):
+				print(r_ks.get("error", "King slot failed"))
+				return
 			ui_ref.close_modal()
 			ui_ref.close_drawn_card_modal()
 			update_discard_card()

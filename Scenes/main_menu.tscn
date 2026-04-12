@@ -3,7 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://cia3x6y07ln1g" path="res://Scenes/UI/background.tscn" id="1_28flt"]
 [ext_resource type="Script" uid="uid://clpnku5kpvbgk" path="res://Scenes/main_menu.gd" id="1_48xlc"]
 [ext_resource type="Texture2D" uid="uid://rfrp7n0yoj3s" path="res://Assets/Buttons/quit button.png" id="3_ce3w2"]
+[ext_resource type="Texture2D" uid="uid://b33fb6f41k82x" path="res://Assets/title.png" id="3_trj04"]
+[ext_resource type="Texture2D" uid="uid://dhjnk8faegnev" path="res://Assets/Buttons/play button.png" id="4_16hvj"]
 [ext_resource type="Texture2D" uid="uid://b8f724jvo3g1m" path="res://Assets/Buttons/quit button_hover.png" id="4_n45e2"]
+[ext_resource type="Texture2D" uid="uid://dx12a0ukxoueg" path="res://Assets/Buttons/play button_hover.png" id="5_vr1f0"]
+[ext_resource type="Texture2D" uid="uid://cx3kpgpoxe2vw" path="res://Assets/Buttons/setting button.png" id="6_t1dhk"]
+[ext_resource type="Texture2D" uid="uid://ddn1r7x1nng0a" path="res://Assets/Buttons/setting button_hover.png" id="7_5egv6"]
 
 [node name="MainMenu" type="Control" unique_id=2027069872]
 layout_mode = 3
@@ -24,16 +29,20 @@ offset_bottom = 652.0
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1778412640]
 layout_direction = 4
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -330.0
-offset_top = 42.0
-offset_right = -85.0
-offset_bottom = 295.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer" unique_id=1509590227]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="CenterContainer/VBoxContainer2" unique_id=503535631]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+texture = ExtResource("3_trj04")
+expand_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=585210713]
 custom_minimum_size = Vector2(41, 0)
@@ -41,13 +50,25 @@ layout_mode = 2
 theme_override_constants/separation = 9
 alignment = 1
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=264707185]
+[node name="PlayButton" type="TextureButton" parent="CenterContainer/VBoxContainer" unique_id=579220050]
+custom_minimum_size = Vector2(140, 45)
 layout_mode = 2
-text = "Play"
+texture_normal = ExtResource("4_16hvj")
+texture_pressed = ExtResource("4_16hvj")
+texture_hover = ExtResource("5_vr1f0")
+texture_disabled = ExtResource("5_vr1f0")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="SettingButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=164716443]
+[node name="SettingButton" type="TextureButton" parent="CenterContainer/VBoxContainer" unique_id=1125433209]
+custom_minimum_size = Vector2(140, 45)
 layout_mode = 2
-text = "Settings"
+texture_normal = ExtResource("6_t1dhk")
+texture_pressed = ExtResource("6_t1dhk")
+texture_hover = ExtResource("7_5egv6")
+texture_disabled = ExtResource("7_5egv6")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="QuitButton" type="TextureButton" parent="CenterContainer/VBoxContainer" unique_id=596592318]
 custom_minimum_size = Vector2(140, 39)
@@ -86,14 +107,5 @@ placeholder_text = "100.97.20.34"
 visible = false
 layout_mode = 2
 placeholder_text = "7777"
-
-[node name="Dummy" type="Button" parent="." unique_id=185028798]
-layout_mode = 0
-offset_left = 236.0
-offset_top = 280.0
-offset_right = 755.0
-offset_bottom = 343.0
-theme_override_font_sizes/font_size = 40
-text = "We're Still In Development"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
