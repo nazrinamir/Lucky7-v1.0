@@ -32,17 +32,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(1, 1), Vector2(1e-05, 1), Vector2(1, 1)]
 }
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("._swap_to_front")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(),
-"transitions": PackedFloat32Array(),
-"values": []
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_12tbw"]
 _data = {
@@ -50,79 +39,181 @@ _data = {
 &"flip": SubResource("Animation_nlxmb")
 }
 
-[node name="QueenRevealCanvas" type="CanvasLayer" unique_id=1701718107]
+[node name="QueenRevealCanvas" type="CanvasLayer"]
+layer = 7
 
-[node name="UIQueenReveal" type="Control" parent="." unique_id=1399978852]
+[node name="UIQueenReveal" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
 script = ExtResource("1_ndge7")
 
-[node name="modal" type="Control" parent="UIQueenReveal" unique_id=1682249122]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="modal" type="Control" parent="UIQueenReveal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="UIQueenReveal/modal" unique_id=215033755]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Dim" type="ColorRect" parent="UIQueenReveal/modal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.75)
 
-[node name="Panel" type="Panel" parent="UIQueenReveal/modal" unique_id=2131000454]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TitleLabel" type="Label" parent="UIQueenReveal/modal"]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -220.0
+offset_right = 280.0
+offset_bottom = -170.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 28
+text = "Player's cards"
+horizontal_alignment = 1
 
-[node name="CardContainer" type="VBoxContainer" parent="UIQueenReveal/modal/Panel" unique_id=99731379]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Panel" type="Panel" parent="UIQueenReveal/modal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -160.0
+offset_right = 340.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Card1" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer" unique_id=1386214575]
+[node name="CardContainer" type="HBoxContainer" parent="UIQueenReveal/modal/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Card1" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer"]
+custom_minimum_size = Vector2(140, 196)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("2_nlxmb")
 
-[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card1" unique_id=1160197622]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card1" unique_id=884188184]
-libraries/ = SubResource("AnimationLibrary_12tbw")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card1"]
+libraries = {
+&"": SubResource("AnimationLibrary_12tbw")
+}
 
-[node name="Card2" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer" unique_id=2046668526]
+[node name="Card2" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer"]
+custom_minimum_size = Vector2(140, 196)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("2_nlxmb")
 
-[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card2" unique_id=1081201701]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card2" unique_id=1996109071]
-libraries/ = SubResource("AnimationLibrary_12tbw")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card2"]
+libraries = {
+&"": SubResource("AnimationLibrary_12tbw")
+}
 
-[node name="Card3" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer" unique_id=571639610]
+[node name="Card3" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer"]
+custom_minimum_size = Vector2(140, 196)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("2_nlxmb")
 
-[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card3" unique_id=2078830396]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card3" unique_id=1493300729]
-libraries/ = SubResource("AnimationLibrary_12tbw")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card3"]
+libraries = {
+&"": SubResource("AnimationLibrary_12tbw")
+}
 
-[node name="Card4" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer" unique_id=568332623]
+[node name="Card4" type="Control" parent="UIQueenReveal/modal/Panel/CardContainer"]
+custom_minimum_size = Vector2(140, 196)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("2_nlxmb")
 
-[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card4" unique_id=1304688195]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TextureRect" type="TextureRect" parent="UIQueenReveal/modal/Panel/CardContainer/Card4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card4" unique_id=217043865]
-libraries/ = SubResource("AnimationLibrary_12tbw")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UIQueenReveal/modal/Panel/CardContainer/Card4"]
+libraries = {
+&"": SubResource("AnimationLibrary_12tbw")
+}
+
+[node name="CloseButton" type="Button" parent="UIQueenReveal/modal"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -72.0
+offset_right = 80.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close"

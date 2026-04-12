@@ -14,6 +14,9 @@ func export_state(game_manager) -> Dictionary:
 		"pending_power_effect": game_manager.pending_power_effect,
 		"selected_target_player_index": game_manager.selected_target_player_index,
 		"selected_own_hand_index_for_j": game_manager.selected_own_hand_index_for_j,
+		"jack_a_player": game_manager.jack_a_player,
+		"jack_a_slot": game_manager.jack_a_slot,
+		"jack_b_player": game_manager.jack_b_player,
 		"deck": game_manager.deck_manager.deck,
 		"turn_number": game_manager.turn_number,
 		"match_history": game_manager.match_history.get_events(),
@@ -32,6 +35,9 @@ func import_state(game_manager, data: Dictionary) -> void:
 	game_manager.pending_power_effect = data.get("pending_power_effect", "")
 	game_manager.selected_target_player_index = data.get("selected_target_player_index", -1)
 	game_manager.selected_own_hand_index_for_j = data.get("selected_own_hand_index_for_j", -1)
+	game_manager.jack_a_player = data.get("jack_a_player", -1)
+	game_manager.jack_a_slot = data.get("jack_a_slot", -1)
+	game_manager.jack_b_player = data.get("jack_b_player", -1)
 
 	game_manager.deck_manager.deck = data.get("deck", [])
 	

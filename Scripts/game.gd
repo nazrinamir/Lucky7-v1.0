@@ -6,6 +6,7 @@ extends Node2D
 
 @onready var cp_manager = $ChoosePlayerManager
 @onready var ui_choose_player = $CPCanvasLayer/UIChoosePlayer
+@onready var ui_queen_reveal = $QueenRevealCanvas/UIQueenReveal
 
 @onready var ui_turn_panel = $TurnCanvas/UITurnPanel
 
@@ -52,6 +53,8 @@ func set_game_ref_to_child():
 	cp_manager.set_game_ref(game_manager)
 	cp_manager.set_ui_ref(ui_choose_player)
 	cp_manager.set_command_router(command_router)
+	cp_manager.set_queen_reveal_ui(ui_queen_reveal)
+	cp_manager.set_input_manager(input_manager)
 
 	ui_choose_player.player_selected.connect(cp_manager.on_player_selected)
 	ui_choose_player.slot_selected.connect(cp_manager.on_slot_selected)

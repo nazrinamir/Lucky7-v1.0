@@ -4,6 +4,8 @@ class_name ChoosePlayerManager
 var game_ref
 var ui_ref
 var command_router: CommandRouter = null
+var queen_reveal_ui: Node = null
+var input_manager_ref: Node = null
 
 var current_power_rank = ""
 var selected_player_index = -1
@@ -22,6 +24,14 @@ func set_ui_ref(value):
 
 func set_command_router(value: CommandRouter) -> void:
 	command_router = value
+
+
+func set_queen_reveal_ui(value: Node) -> void:
+	queen_reveal_ui = value
+
+
+func set_input_manager(value: Node) -> void:
+	input_manager_ref = value
 
 func _execute(command: Dictionary) -> Dictionary:
 	if command_router == null:
@@ -57,30 +67,29 @@ func open_modal():
 	match current_power_rank:
 		"J":
 			flow_step = "jack_first_player"
-			ui_ref.set_instruction("Select First Player")
+			ui_ref.set_instruction("Select player A")
 			ui_ref.show_player_selection()
 
 		"Q":
 			flow_step = "queen_player"
-			ui_ref.set_instruction("Select Player")
+			ui_ref.set_instruction("Select player to reveal (all slots)")
 			ui_ref.show_player_selection()
 
 		"K":
 			flow_step = "king_player"
-			ui_ref.set_instruction("Select Player")
+			ui_ref.set_instruction("Select player to lock a card")
 			ui_ref.show_player_selection()
 
 		"JOKER":
 			flow_step = "joker_player"
-			ui_ref.set_instruction("Select Player To Shuffle")
+			ui_ref.set_instruction("Select player to shuffle their hand")
 			ui_ref.show_player_selection()
 
 		_:
 			ui_ref.close_modal()
-			ui_ref.close_drawn_card_modal()
-			update_discard_card()
+			_close_power_action_panel()
 
-func on_player_selected(player_index: int):
+func on_player_selected(player_index: int) -> void:
 	print("Player selected:", player_index, "step:", flow_step)
 
 	if game_ref == null:
@@ -95,7 +104,7 @@ func on_player_selected(player_index: int):
 				print(r_j1.get("error", "Jack first player failed"))
 				return
 			flow_step = "jack_first_slot"
-			ui_ref.set_instruction("Select First Slot")
+			ui_ref.set_instruction("Select a slot for player A")
 			ui_ref.show_slot_selection()
 
 		"jack_second_player":
@@ -105,7 +114,7 @@ func on_player_selected(player_index: int):
 				print(r_j2.get("error", "Jack second player failed"))
 				return
 			flow_step = "jack_second_slot"
-			ui_ref.set_instruction("Select Second Slot")
+			ui_ref.set_instruction("Select a slot for player B")
 			ui_ref.show_slot_selection()
 
 		"queen_player":
@@ -114,8 +123,13 @@ func on_player_selected(player_index: int):
 				print(r_q.get("error", "Queen selection failed"))
 				return
 			ui_ref.close_modal()
-			ui_ref.close_drawn_card_modal()
-			update_discard_card()
+			_close_power_action_panel()
+			var pname: String = str(game_ref.players[player_index].get("name", "Player"))
+			var hand_snapshot: Array = game_ref.players[player_index]["hand"].duplicate(true)
+			if queen_reveal_ui != null and queen_reveal_ui.has_method("run_show_and_wait"):
+				await queen_reveal_ui.run_show_and_wait(pname, hand_snapshot)
+			if input_manager_ref != null and input_manager_ref.has_method("refresh_ui"):
+				input_manager_ref.refresh_ui()
 
 		"king_player":
 			selected_player_index = player_index
@@ -124,7 +138,7 @@ func on_player_selected(player_index: int):
 				print(r_kp.get("error", "King player selection failed"))
 				return
 			flow_step = "king_slot"
-			ui_ref.set_instruction("Select Slot To Lock")
+			ui_ref.set_instruction("Select slot to lock on that player")
 			ui_ref.show_slot_selection()
 
 		"joker_player":
@@ -133,8 +147,7 @@ func on_player_selected(player_index: int):
 				print(r_jk.get("error", "Joker selection failed"))
 				return
 			ui_ref.close_modal()
-			ui_ref.close_drawn_card_modal()
-			update_discard_card()
+			_close_power_action_panel()
 
 func on_slot_selected(slot_index: int):
 	print("Slot selected:", slot_index, "step:", flow_step)
@@ -151,7 +164,7 @@ func on_slot_selected(slot_index: int):
 				print(r_s1.get("error", "Jack first slot failed"))
 				return
 			flow_step = "jack_second_player"
-			ui_ref.set_instruction("Select Second Player")
+			ui_ref.set_instruction("Select player B")
 			ui_ref.show_player_selection()
 
 		"jack_second_slot":
@@ -161,8 +174,7 @@ func on_slot_selected(slot_index: int):
 				print(r_s2.get("error", "Jack second slot failed"))
 				return
 			ui_ref.close_modal()
-			ui_ref.close_drawn_card_modal()
-			update_discard_card()
+			_close_power_action_panel()
 
 		"king_slot":
 			var r_ks = _execute({"type": "select_slot", "slot_index": slot_index})
@@ -170,9 +182,15 @@ func on_slot_selected(slot_index: int):
 				print(r_ks.get("error", "King slot failed"))
 				return
 			ui_ref.close_modal()
-			ui_ref.close_drawn_card_modal()
-			update_discard_card()
+			_close_power_action_panel()
 
 func update_discard_card():
 	var top_card = game_ref.get_top_discard()
 	ui_ref.update_d_card(top_card)
+
+
+func _close_power_action_panel() -> void:
+	ui_ref.close_drawn_card_modal()
+	update_discard_card()
+	if input_manager_ref != null and input_manager_ref.has_method("refresh_ui"):
+		input_manager_ref.refresh_ui()

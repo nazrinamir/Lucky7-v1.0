@@ -5,18 +5,18 @@ signal player_selected(player_index: int)
 signal slot_selected(slot_index: int)
 
 const CARD_DESCRIPTION = {
-	"J": "Choose two players and two slots to swap cards",
-	"Q": "Choose a player to view a card",
-	"K": "Choose a player and a slot to lock",
-	"JOKER": "Choose a player to shuffle their slots"
+	"J": "Player A, A's slot, then player B and B's slot — swap those two cards",
+	"Q": "Choose a player to reveal all four slots",
+	"K": "Choose a player, then a slot on their hand to lock",
+	"JOKER": "Choose a player to shuffle their hand"
 }
 
 @onready var TurnLabel = $"../../TurnCanvas/UITurnPanel/CenterContainer/TurnLabel"
 
-@onready var drawn_card = $"../../CardCanvasLayer/UICard/DrawnCard"
-@onready var power_button = $"../../CardCanvasLayer/UICard/PowerButton"
-@onready var discard_button = $"../../CardCanvasLayer/UICard/DiscardButton"
-@onready var swap_button = $"../../CardCanvasLayer/UICard/SwapButton"
+@onready var drawn_card = $"../../CardCanvasLayer/UICard/Panel/DrawnCard"
+@onready var power_button = $"../../CardCanvasLayer/UICard/Panel/VBoxContainer/PowerButton"
+@onready var discard_button = $"../../CardCanvasLayer/UICard/Panel/VBoxContainer/DiscardButton"
+@onready var swap_button = $"../../CardCanvasLayer/UICard/Panel/VBoxContainer/SwapButton"
 
 @onready var modal = $modal
 @onready var p1_button = $modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer/Player1
@@ -86,11 +86,15 @@ func set_turn_label(label:int):
 	TurnLabel.text = label
 	
 
-func close_group_drawn_card():
-	drawn_card.visible = false
-	power_button.visible = false
-	discard_button.visible = false
-	swap_button.visible = false
+func close_group_drawn_card() -> void:
+	if drawn_card:
+		drawn_card.visible = false
+	if power_button:
+		power_button.visible = false
+	if discard_button:
+		discard_button.visible = false
+	if swap_button:
+		swap_button.visible = false
 
 func update_d_card(top_card_discard):
 	discard_card_display.texture_normal = top_card_discard["card"]["texture"]

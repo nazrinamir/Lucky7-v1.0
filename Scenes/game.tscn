@@ -24,8 +24,9 @@
 [ext_resource type="Script" uid="uid://ddjj2s5q1oh8k" path="res://Scenes/UI/ui_choose_player.gd" id="12_rfjv2"]
 [ext_resource type="Script" uid="uid://dbmoxc6krylue" path="res://Scripts/choose_player_manager.gd" id="12_rku1e"]
 [ext_resource type="Script" uid="uid://dtdde5p6w13e0" path="res://Scripts/UI Scripts/ui_turn_panel.gd" id="14_1phco"]
-[ext_resource type="Script" uid="uid://cjq8m4pause7mgr" path="res://Scripts/pause_manager.gd" id="15_pause"]
-[ext_resource type="Script" uid="uid://d8kdeckvisfx001" path="res://Components/deck_visual_fx.gd" id="16_deckfx"]
+[ext_resource type="Script" path="res://Scripts/pause_manager.gd" id="15_pause"]
+[ext_resource type="Script" uid="uid://2wolpo1dch81" path="res://Components/deck_visual_fx.gd" id="16_deckfx"]
+[ext_resource type="PackedScene" uid="uid://corti871wdpfc" path="res://Scenes/UI/queen_reveal_canvas.tscn" id="17_queen"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_85qyi"]
 load_path = "res://.godot/imported/discard_selected.png-f730bf0cdefd22672d22b9be1b26b712.ctex"
@@ -82,9 +83,12 @@ offset_bottom = 282.0
 
 [node name="UICard" type="Control" parent="CardCanvasLayer" unique_id=1987625918]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="DiscardCard" type="TextureButton" parent="CardCanvasLayer/UICard" unique_id=419929398]
 layout_mode = 0
@@ -96,18 +100,12 @@ ignore_texture_size = true
 stretch_mode = 4
 
 [node name="Panel" type="Panel" parent="CardCanvasLayer/UICard" unique_id=1664996882]
-clip_contents = false
 self_modulate = Color(0, 0, 0, 1)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 17.803001
-anchor_top = 3.7140002
-anchor_right = 25.625002
-anchor_bottom = 11.075001
-offset_left = -38.120056
-offset_top = -43.560013
-offset_right = 42.999878
-offset_bottom = 29.99997
+layout_mode = 0
+offset_left = 320.0
+offset_top = 20.0
+offset_right = 820.0
+offset_bottom = 389.0
 
 [node name="DrawnCard" type="TextureRect" parent="CardCanvasLayer/UICard/Panel" unique_id=142591384]
 layout_mode = 0
@@ -161,7 +159,6 @@ stretch_mode = 0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=568644002]
 layer = 2
-visible = false
 
 [node name="UI" type="Control" parent="CanvasLayer" unique_id=1726963063]
 layout_mode = 3
@@ -311,6 +308,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("12_rfjv2")
 
+[node name="QueenRevealCanvas" parent="." unique_id=686054775 instance=ExtResource("17_queen")]
+
 [node name="TurnCanvas" type="CanvasLayer" parent="." unique_id=2099088581]
 
 [node name="UITurnPanel" type="Panel" parent="TurnCanvas" unique_id=1024323510]
@@ -367,9 +366,9 @@ process_mode = 3
 script = ExtResource("15_pause")
 
 [node name="PauseCanvasLayer" type="CanvasLayer" parent="." unique_id=231251141]
+process_mode = 3
 layer = 10
 visible = false
-process_mode = 3
 
 [node name="UI" type="Control" parent="PauseCanvasLayer" unique_id=821237988]
 layout_mode = 3

@@ -187,6 +187,7 @@ func update_drawn_card_ui():
 	var card = game_ref.current_drawn_card
 	if card.is_empty():
 		drawn_card_display.texture = null
+		drawn_card_display.visible = false
 		drawn_card_panel.visible = false
 		discard_button.visible = false
 		swap_button.visible = false
@@ -194,6 +195,7 @@ func update_drawn_card_ui():
 		return
 	
 	drawn_card_panel.visible = true
+	drawn_card_display.visible = true
 	power_button.visible = int(card.get("value", 0)) == -1
 	drawn_card_display.texture = _resolve_texture(card.get("texture", null))
 	discard_button.visible = true

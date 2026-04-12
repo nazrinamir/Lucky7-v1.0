@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://cil2208dm35fj"]
 
 [ext_resource type="Texture2D" uid="uid://csk5y2dxyjhlx" path="res://Assets/Red-Cover.png" id="1_7gbtc"]
-[ext_resource type="Texture2D" uid="uid://cpk3s5vr5rphl" path="res://Assets/Blue-Cover.png" id="2_r37m3"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kxsja"]
+load_path = "res://.godot/imported/Red-Cover.png-175c5f858aa185a1e5c95a93bdec0387.ctex"
 
 [node name="UIChoosePlayer" type="Control" unique_id=1423122256]
 layout_mode = 3
@@ -50,28 +52,34 @@ horizontal_alignment = 1
 [node name="ParentHBoxContainer" type="HBoxContainer" parent="modal/Panel/CenterContainer/VBoxContainer" unique_id=1934542790]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer" unique_id=1618770609]
+[node name="HBoxContainer" type="GridContainer" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer" unique_id=2041051068]
 layout_mode = 2
-alignment = 1
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 30
+columns = 2
 
 [node name="Player1" type="Button" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer" unique_id=1963574945]
 modulate = Color(0.97551066, 0.36518097, 0.3087498, 1)
 layout_mode = 2
+theme_override_font_sizes/font_size = 45
 text = "P1"
 
 [node name="Player2" type="Button" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer" unique_id=839329974]
 modulate = Color(0.71748894, 0.39526242, 0.9027352, 1)
 layout_mode = 2
+theme_override_font_sizes/font_size = 45
 text = "P2"
 
 [node name="Player3" type="Button" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer" unique_id=1119926454]
 modulate = Color(0.22121578, 0.49337113, 0.45691407, 1)
 layout_mode = 2
+theme_override_font_sizes/font_size = 45
 text = "P3"
 
 [node name="Player4" type="Button" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer" unique_id=1033763465]
 modulate = Color(0.7216109, 0.7109991, 0.38213968, 1)
 layout_mode = 2
+theme_override_font_sizes/font_size = 45
 text = "P4"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer" unique_id=1114600473]
@@ -82,22 +90,22 @@ layout_mode = 2
 layout_mode = 2
 texture_normal = ExtResource("1_7gbtc")
 texture_pressed = ExtResource("1_7gbtc")
-texture_hover = ExtResource("2_r37m3")
+texture_hover = SubResource("CompressedTexture2D_kxsja")
 
 [node name="Slot2" type="TextureButton" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2" unique_id=680754587]
 layout_mode = 2
 texture_normal = ExtResource("1_7gbtc")
 texture_pressed = ExtResource("1_7gbtc")
-texture_hover = ExtResource("2_r37m3")
+texture_hover = ExtResource("1_7gbtc")
 
 [node name="Slot3" type="TextureButton" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2" unique_id=125807662]
 layout_mode = 2
 texture_normal = ExtResource("1_7gbtc")
 texture_pressed = ExtResource("1_7gbtc")
-texture_hover = ExtResource("2_r37m3")
+texture_hover = ExtResource("1_7gbtc")
 
 [node name="Slot4" type="TextureButton" parent="modal/Panel/CenterContainer/VBoxContainer/ParentHBoxContainer/HBoxContainer2" unique_id=2143148375]
 layout_mode = 2
 texture_normal = ExtResource("1_7gbtc")
 texture_pressed = ExtResource("1_7gbtc")
-texture_hover = ExtResource("2_r37m3")
+texture_hover = ExtResource("1_7gbtc")

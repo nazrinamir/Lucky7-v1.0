@@ -50,6 +50,9 @@ var active_power_card: Dictionary = {}
 var pending_power_effect: String = ""
 var selected_target_player_index: int = -1
 var selected_own_hand_index_for_j: int = -1
+var jack_a_player: int = -1
+var jack_a_slot: int = -1
+var jack_b_player: int = -1
 
 
 #func _ready() -> void:
@@ -134,6 +137,9 @@ func reset_power_state() -> void:
 	pending_power_effect = ""
 	selected_target_player_index = -1
 	selected_own_hand_index_for_j = -1
+	jack_a_player = -1
+	jack_a_slot = -1
+	jack_b_player = -1
 
 
 func get_current_player() -> Dictionary:
@@ -394,32 +400,40 @@ func clear_j_selection() -> void:
 # =========================
 # POWER EFFECTS
 # =========================
-func resolve_j_effect(my_hand_index: int, target_player_index: int, target_hand_index: int) -> bool:
+func resolve_jack_swap(player_a: int, slot_a: int, player_b: int, slot_b: int) -> bool:
 	var success = player_manager.swap_between_players(
 		players,
-		current_player_index,
-		my_hand_index,
-		target_player_index,
-		target_hand_index
+		player_a,
+		slot_a,
+		player_b,
+		slot_b
 	)
 
 	if success:
 		log_message([
-			players[current_player_index]["name"],
-			"swapped a card with",
-			players[target_player_index]["name"]
+			players[player_a]["name"],
+			"slot",
+			slot_a,
+			"<->",
+			players[player_b]["name"],
+			"slot",
+			slot_b
 		])
 
-		record_event("resolve_j_effect", {
-			"source_player_index": current_player_index,
-			"source_player_name": players[current_player_index]["name"],
-			"source_hand_index": my_hand_index,
-			"target_player_index": target_player_index,
-			"target_player_name": players[target_player_index]["name"],
-			"target_hand_index": target_hand_index
+		record_event("resolve_jack_swap", {
+			"player_a_index": player_a,
+			"player_a_name": players[player_a]["name"],
+			"slot_a": slot_a,
+			"player_b_index": player_b,
+			"player_b_name": players[player_b]["name"],
+			"slot_b": slot_b
 		})
 
 	return success
+
+
+func resolve_j_effect(my_hand_index: int, target_player_index: int, target_hand_index: int) -> bool:
+	return resolve_jack_swap(current_player_index, my_hand_index, target_player_index, target_hand_index)
 
 
 func resolve_q_effect(target_player_index: int) -> bool:
@@ -531,7 +545,21 @@ func handle_player_input(player_index: int) -> Dictionary:
 				return {"ok": true, "message": "Player selected"}
 			return {"ok": false, "error": "Joker effect failed"}
 
-		POWER_J, POWER_K:
+		POWER_J:
+			if jack_a_player == -1:
+				jack_a_player = player_index
+				log_message(["Jack: chose player A:", players[player_index]["name"]])
+				return {"ok": true, "message": "Jack player A selected"}
+			if jack_a_slot != -1 and jack_b_player == -1:
+				jack_b_player = player_index
+				log_message(["Jack: chose player B:", players[player_index]["name"]])
+				return {"ok": true, "message": "Jack player B selected"}
+			return {
+				"ok": false,
+				"error": "Choose player A, then a slot for A, then player B."
+			}
+
+		POWER_K:
 			selected_target_player_index = player_index
 			log_message(["Selected target player:", players[player_index]["name"]])
 			return {"ok": true, "message": "Target player selected"}
@@ -580,33 +608,36 @@ func handle_power_action_slot(slot_index: int) -> Dictionary:
 
 
 func handle_j_power_slot(slot_index: int) -> Dictionary:
-	if selected_own_hand_index_for_j == -1:
-		if not is_valid_hand_index(current_player_index, slot_index):
-			var error = "Invalid own slot selection."
-			log_message([error])
-			return {"ok": false, "error": error}
+	if jack_a_player == -1:
+		var err = "Choose player A first."
+		log_message([err])
+		return {"ok": false, "error": err}
 
-		selected_own_hand_index_for_j = slot_index
-		log_message(["Selected your own slot for J:", slot_index])
-		return {"ok": true, "message": "Own J slot selected"}
+	if jack_a_slot == -1:
+		if not is_valid_hand_index(jack_a_player, slot_index):
+			var error_a = "Invalid slot for player A."
+			log_message([error_a])
+			return {"ok": false, "error": error_a}
+		jack_a_slot = slot_index
+		log_message(["Jack: slot for A:", slot_index])
+		return {"ok": true, "message": "Jack slot A selected"}
 
-	if selected_target_player_index == -1:
-		var error = "Select a target player for J first."
-		log_message([error])
-		return {"ok": false, "error": error}
+	if jack_b_player == -1:
+		var err_b = "Choose player B before their slot."
+		log_message([err_b])
+		return {"ok": false, "error": err_b}
 
-	if not is_valid_hand_index(selected_target_player_index, slot_index):
-		var error = "Invalid target slot selection."
-		log_message([error])
-		return {"ok": false, "error": error}
+	if not is_valid_hand_index(jack_b_player, slot_index):
+		var error_b = "Invalid slot for player B."
+		log_message([error_b])
+		return {"ok": false, "error": error_b}
 
-	if resolve_j_effect(selected_own_hand_index_for_j, selected_target_player_index, slot_index):
-		clear_j_selection()
+	if resolve_jack_swap(jack_a_player, jack_a_slot, jack_b_player, slot_index):
 		clear_power_target()
 		finish_power_card_resolution()
 		return {"ok": true, "message": "J effect resolved"}
 
-	var error = "J effect failed."
+	var error = "Jack swap failed (locked cards or same player?)."
 	log_message([error])
 	return {"ok": false, "error": error}
 
