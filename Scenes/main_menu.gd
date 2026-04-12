@@ -1,13 +1,13 @@
 extends Control
 
-@onready var play_button = $CenterContainer/VBoxContainer/PlayButton
-@onready var host_button = $CenterContainer/VBoxContainer/HostButton
-@onready var join_button = $CenterContainer/VBoxContainer/JoinButton
-@onready var start_button = $CenterContainer/VBoxContainer/StartButton
-@onready var settings_button = $CenterContainer/VBoxContainer/SettingButton
-@onready var quit_button = $CenterContainer/VBoxContainer/QuitButton
-@onready var address_input: LineEdit = $CenterContainer/VBoxContainer/AddressInput
-@onready var port_input: LineEdit = $CenterContainer/VBoxContainer/PortInput
+@onready var play_button = $CenterContainer/HBoxContainer/VBoxContainer/PlayButton
+@onready var host_button = $CenterContainer/HBoxContainer/VBoxContainer/HostButton
+@onready var join_button = $CenterContainer/HBoxContainer/VBoxContainer/JoinButton
+@onready var start_button = $CenterContainer/HBoxContainer/VBoxContainer/StartButton
+@onready var settings_button = $CenterContainer/HBoxContainer/VBoxContainer/SettingButton
+@onready var quit_button = $CenterContainer/HBoxContainer/VBoxContainer/QuitButton
+@onready var address_input: LineEdit = $CenterContainer/HBoxContainer/VBoxContainer/AddressInput
+@onready var port_input: LineEdit = $CenterContainer/HBoxContainer/VBoxContainer/PortInput
 
 var current_room_id: String = ""
 var lobby_manager: LobbyManager

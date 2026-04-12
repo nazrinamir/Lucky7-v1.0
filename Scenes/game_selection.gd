@@ -1,7 +1,7 @@
 extends Control
 
-@onready var singleplayer_button = $HBoxContainer/SinglePlayerButton
-@onready var multiplayer_button = $HBoxContainer/MultiplayerButton
+@onready var singleplayer_button = $CenterContainer/HBoxContainer/SinglePlayerButton
+@onready var multiplayer_button = $CenterContainer/HBoxContainer/MultiplayerButton
 @onready var back_button = $BackButton
 
 func _ready() -> void:
