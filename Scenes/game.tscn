@@ -8,9 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://bivtsima3542k" path="res://Scenes/UI/modal.tscn" id="4_3dryh"]
 [ext_resource type="Script" uid="uid://el1vfo8up0ed" path="res://Scripts/UI Scripts/UI.gd" id="4_i6g32"]
 [ext_resource type="Texture2D" uid="uid://dlrgkhutjsc52" path="res://Assets/Buttons/discard_unselected.png" id="5_85qyi"]
+[ext_resource type="Texture2D" uid="uid://f7tgauu5vdc4" path="res://Assets/Buttons/use me button_unselected.png" id="5_vm72l"]
 [ext_resource type="Script" uid="uid://1v4qbbyx6gfg" path="res://Scripts/UI Scripts/modal.gd" id="5_wowpa"]
+[ext_resource type="Texture2D" uid="uid://pxm1efxnjh0e" path="res://Assets/Buttons/use me button_selected.png" id="6_22asu"]
 [ext_resource type="Texture2D" uid="uid://d2v4de6utvjlr" path="res://Assets/Buttons/discard_selected.png" id="6_iivbl"]
 [ext_resource type="Texture2D" uid="uid://bwrcije4x8q2c" path="res://Assets/Buttons/discard_hover.png" id="7_7nbq1"]
+[ext_resource type="Texture2D" uid="uid://cv1vl5pppk24h" path="res://Assets/Buttons/use me button_hover.png" id="7_fkdbe"]
 [ext_resource type="Texture2D" uid="uid://j3fnyj1rbuai" path="res://Assets/Buttons/swap_unselected.png" id="8_exi56"]
 [ext_resource type="Script" uid="uid://o1a1xft4uljk" path="res://Scripts/input_manager.gd" id="8_v158k"]
 [ext_resource type="Texture2D" uid="uid://cwrcf4kx4r7xr" path="res://Assets/Buttons/swap_selected.png" id="9_7t8sx"]
@@ -21,6 +24,8 @@
 [ext_resource type="Script" uid="uid://ddjj2s5q1oh8k" path="res://Scenes/UI/ui_choose_player.gd" id="12_rfjv2"]
 [ext_resource type="Script" uid="uid://dbmoxc6krylue" path="res://Scripts/choose_player_manager.gd" id="12_rku1e"]
 [ext_resource type="Script" uid="uid://dtdde5p6w13e0" path="res://Scripts/UI Scripts/ui_turn_panel.gd" id="14_1phco"]
+[ext_resource type="Script" uid="uid://cjq8m4pause7mgr" path="res://Scripts/pause_manager.gd" id="15_pause"]
+[ext_resource type="Script" uid="uid://d8kdeckvisfx001" path="res://Components/deck_visual_fx.gd" id="16_deckfx"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_85qyi"]
 load_path = "res://.godot/imported/discard_selected.png-f730bf0cdefd22672d22b9be1b26b712.ctex"
@@ -57,6 +62,16 @@ offset_right = 605.0
 offset_bottom = 282.0
 tooltip_text = "Deck - You draw card here man."
 
+[node name="DeckDealFxLayer" type="CanvasLayer" parent="." unique_id=88220100]
+layer = 8
+
+[node name="DeckVisualFx" type="Node2D" parent="DeckDealFxLayer" unique_id=88220101]
+script = ExtResource("16_deckfx")
+
+[node name="FxCard" type="Sprite2D" parent="DeckDealFxLayer/DeckVisualFx" unique_id=88220102]
+z_index = 200
+scale = Vector2(0.7089947, 0.70899475)
+
 [node name="DiscardSlot" parent="." unique_id=372584211 instance=ExtResource("3_wrm1d")]
 offset_left = 515.0
 offset_top = 282.0
@@ -81,6 +96,7 @@ ignore_texture_size = true
 stretch_mode = 4
 
 [node name="Panel" type="Panel" parent="CardCanvasLayer/UICard" unique_id=1664996882]
+clip_contents = false
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 1
 anchors_preset = -1
@@ -108,9 +124,15 @@ offset_right = 384.0
 offset_bottom = 319.0
 theme_override_constants/separation = 18
 
-[node name="PowerButton" type="Button" parent="CardCanvasLayer/UICard/Panel/VBoxContainer" unique_id=2044825035]
+[node name="PowerButton" type="TextureButton" parent="CardCanvasLayer/UICard/Panel/VBoxContainer" unique_id=1451596026]
+custom_minimum_size = Vector2(140, 45)
 layout_mode = 2
-text = "USE ME!"
+texture_normal = ExtResource("5_vm72l")
+texture_pressed = ExtResource("6_22asu")
+texture_hover = ExtResource("7_fkdbe")
+texture_disabled = ExtResource("6_22asu")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="DiscardButton" type="TextureButton" parent="CardCanvasLayer/UICard/Panel/VBoxContainer" unique_id=323395126]
 custom_minimum_size = Vector2(140, 45)
@@ -324,3 +346,69 @@ script = ExtResource("10_ldgsr")
 
 [node name="ChoosePlayerManager" type="Node2D" parent="." unique_id=104218542]
 script = ExtResource("12_rku1e")
+
+[node name="PauseHudLayer" type="CanvasLayer" parent="." unique_id=77120003]
+layer = 9
+
+[node name="PauseButton" type="Button" parent="PauseHudLayer" unique_id=77120002]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -115.0
+offset_top = 12.0
+offset_right = -15.0
+offset_bottom = 52.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 18
+text = "Pause"
+
+[node name="PauseManager" type="Node" parent="." unique_id=77120001]
+process_mode = 3
+script = ExtResource("15_pause")
+
+[node name="PauseCanvasLayer" type="CanvasLayer" parent="." unique_id=231251141]
+layer = 10
+visible = false
+process_mode = 3
+
+[node name="UI" type="Control" parent="PauseCanvasLayer" unique_id=821237988]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="PauseCanvasLayer/UI" unique_id=125947279]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseCanvasLayer/UI/Panel" unique_id=823546630]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseCanvasLayer/UI/Panel/CenterContainer" unique_id=1347450523]
+layout_mode = 2
+
+[node name="ResumeButton" type="Button" parent="PauseCanvasLayer/UI/Panel/CenterContainer/VBoxContainer" unique_id=1715107065]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Resume"
+
+[node name="SettingButton" type="Button" parent="PauseCanvasLayer/UI/Panel/CenterContainer/VBoxContainer" unique_id=1376858132]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="PauseCanvasLayer/UI/Panel/CenterContainer/VBoxContainer" unique_id=2065388382]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quit Game"

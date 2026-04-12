@@ -244,8 +244,11 @@ func _handle_local_input(event) -> void:
 		cmd = {"type": "select_player", "player_index": 3}
 
 	if not cmd.is_empty():
-		command_router.execute(cmd)
-		_refresh_view()
+		var r := command_router.execute(cmd)
+		if r.get("ok", false) and cmd.get("type", "") == "draw_card":
+			input_manager.run_draw_card_visuals_deferred.call_deferred()
+		else:
+			_refresh_view()
 
 
 func _on_command_applied(applied_room_id: String, result: Dictionary, snapshot: Dictionary) -> void:
@@ -264,6 +267,10 @@ func _on_command_applied(applied_room_id: String, result: Dictionary, snapshot: 
 	game_manager.state_serializer.import_state(game_manager, snapshot)
 
 	waiting_for_snapshot = false
+
+	if result.get("type", "") == "draw_card":
+		await input_manager.run_draw_card_visuals()
+
 	_refresh_view()
 	print("Updated from room snapshot:", result)
 

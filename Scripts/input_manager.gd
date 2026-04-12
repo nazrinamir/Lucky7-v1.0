@@ -8,6 +8,7 @@ const BACK_CARD = preload("res://Assets/Red-Cover.png")
 @onready var choose_player_manager = $"../ChoosePlayerManager"
 
 @onready var deck = $"../Deck/Area2D"
+@onready var deck_visual_fx: DeckVisualFx = $"../DeckDealFxLayer/DeckVisualFx"
 @onready var drawn_card_panel = $"../CardCanvasLayer/UICard/Panel"
 @onready var deck_button = $"../Deck"
 @onready var discard_button = $"../CardCanvasLayer/UICard/Panel/VBoxContainer/DiscardButton"
@@ -72,6 +73,12 @@ func _ready():
 	
 	for i in range(hand_slots.size()):
 		hand_slots[i].pressed.connect(func(): _on_slot_pressed(i))
+
+	if drawn_card_display:
+		drawn_card_display.move_to_front()
+		drawn_card_display.z_index = 10
+		drawn_card_display.ignore_texture_size = true
+		drawn_card_display.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	
 	slot_manager.update_hand_ui()
 	update_discard_card_ui()
@@ -79,7 +86,7 @@ func _ready():
 	
 
 
-func _on_deck_pressed():
+func _on_deck_pressed() -> void:
 	if game_ref == null:
 		print("game_ref is null")
 		return
@@ -89,9 +96,26 @@ func _on_deck_pressed():
 		print(result.get("error", "Draw failed"))
 		return
 
+	await run_draw_card_visuals()
+	refresh_ui()
+
+
+func run_draw_card_visuals_deferred() -> void:
+	await run_draw_card_visuals()
+	var gr := get_parent()
+	if gr and gr.has_method("_refresh_view"):
+		gr._refresh_view()
+
+
+func run_draw_card_visuals() -> void:
+	if deck_visual_fx:
+		var t_deck = deck_visual_fx.play_deal_fx()
+		if t_deck != null and t_deck.is_valid():
+			await t_deck.finished
+
+	update_drawn_card_ui()
 	drawn_card_display.position = drawn_card_start_position
 	tween_manager.slide_card_down(drawn_card_display)
-	update_drawn_card_ui()
 
 func _on_discard_pressed():
 	if game_ref == null:
@@ -146,6 +170,7 @@ func _on_take_discard_card_pressed():
 		print(result.get("error", "Take discard failed"))
 		return
 
+	update_drawn_card_ui()
 	drawn_card_display.position = drawn_card_start_position
 	tween_manager.slide_card_down(drawn_card_display)
 	refresh_ui()
